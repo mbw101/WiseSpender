@@ -24,6 +24,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import { getUpdateString, getCurrentDate } from './screens/helpers';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -57,6 +58,8 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+  console.log(getUpdateString());
+  console.log(getCurrentDate());
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,

@@ -18,14 +18,7 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-function getCurrentDate(): string {
-    let date: Date = new Date();
-    const month = date.toLocaleString('default', { month: 'short' });
-    const day = date.getDay();
-    const year = date.getFullYear();
-
-    return `${month} ${day}, ${year}`;
-}
+import { getCurrentDate } from "./helpers";
 
 function HomeScreen() {
     return (
