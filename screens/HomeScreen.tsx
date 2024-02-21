@@ -19,12 +19,17 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import { getCurrentDate } from "./helpers";
+import { NavigationContainer } from '@react-navigation/native';
 
 function HomeScreen() {
     return (
-        <View>
-            <Text>{getCurrentDate()}</Text>
-        </View>
+        <NavigationContainer>
+            {/* <Stack.Navigator> */}
+            <View>
+                <Text>{getCurrentDate()}</Text>
+            </View>
+            {/* </Stack.Navigator> */}
+        </NavigationContainer>
     )
 }
 
