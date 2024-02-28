@@ -17,7 +17,7 @@ import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 import { getUpdateString, getCurrentDate } from './screens/helpers';
-import InitialScreen  from './screens/InitialScreen';
+import InitialScreen from './screens/InitialScreen';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -41,23 +41,10 @@ function App(): React.JSX.Element {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white'
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+    flex: 1,
+    flexDirection: 'row',
+    height: "100%",
+    width: "100%"
   },
 });
 
