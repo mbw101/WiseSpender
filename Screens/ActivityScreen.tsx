@@ -1,10 +1,12 @@
 import * as React from "react";
 import { View, Text, StyleSheet } from 'react-native';
+import NavigateComponent from "../Components/Navigator";
 
-const ActivityScreen: React.FC = () => {
+const ActivityScreen = () => {
   return (
     <View style={styles.container}>
       <Text>Activity Screen</Text>
+      <NavigateComponent/>
     </View>
   );
 };

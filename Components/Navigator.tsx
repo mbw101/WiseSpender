@@ -1,5 +1,6 @@
+import React from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import { NavigationContainer, NavigationProp } from '@react-navigation/native';
+import { NavigationContainer, NavigationProp, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // custom icons
@@ -7,40 +8,26 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import Feather from "react-native-vector-icons/Feather";
 
-import HomeScreen from "../Screens/HomeScreen";
-import ActivityScreen from "../Screens/ActivityScreen";
-
-type RootStackParamList = {
-  Home: undefined;
-  Details: { itemId: number };
-  // ...other screens
-};
-
-type NavigationType = NavigationProp<RootStackParamList>;
-
-interface NavigateComponentProps {
-  navigation: NavigationType;
-}
-
-const NavigateComponent: React.FC<NavigateComponentProps> = ({navigation}) => {
+const NavigateComponent: React.FC = () => {
+    const navigation = useNavigation();
     return (
         <View style={styles.nav}>
-          <TouchableOpacity style={styles.col}>
+          <TouchableOpacity style={styles.col} onPress={() => navigation.navigate('Home')}>
             <AntDesign color="white" size={24} name="home"/>
             <Text style={styles.navText}>Home</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.col}>
+          <TouchableOpacity style={styles.col} onPress={() => navigation.navigate('Archive')}>
             <FontAwesome5 color="white" size={22} name="history"/>
             <Text style={styles.navText}>History</Text>
           </TouchableOpacity>
           <TouchableOpacity>
             <Feather color="white" size={48} name="plus-square"/>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.col}>
+          <TouchableOpacity style={styles.col} onPress={() => navigation.navigate('Activity')}>
             <Feather color="white" size={24} name="activity"/>
             <Text style={styles.navText}>Activity</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.col}>
+          <TouchableOpacity style={styles.col} onPress={() => navigation.navigate('Profile')}>
             <FontAwesome5 color="white" size={24} name="user-circle"/>
             <Text style={styles.navText}>Profile</Text>
           </TouchableOpacity>

@@ -1,12 +1,10 @@
 import * as React from "react";
 import { View, Text, StyleSheet } from 'react-native';
-import NavigateComponent from "../Components/Navigator";
 
-const HomeScreen = () => {
+const HistoryScreen = () => {
   return (
     <View style={styles.container}>
-      <Text>Home Screen</Text>
-      <NavigateComponent/>
+      <Text>History Screen</Text>
     </View>
   );
 };
@@ -19,4 +17,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default HistoryScreen;
