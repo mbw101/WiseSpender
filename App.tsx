@@ -1,10 +1,10 @@
 import React from 'react';
-
 import { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import 'react-native-gesture-handler';
+
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -45,9 +45,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    flexDirection: 'row',
-    height: "100%",
-    width: "100%"
   },
 });
 
