@@ -62,7 +62,7 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
                 <TouchableOpacity onPress={() => {
                     // Ensure they don't add an empty goal
                     if (goalText === '') {
-                        let toast = Toast.show('Please enter a goal.', {
+                        Toast.show('Please enter a goal.', {
                             duration: Toast.durations.LONG,
                         });
                         return;

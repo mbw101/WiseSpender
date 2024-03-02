@@ -1,7 +1,7 @@
 export function getCurrentDate(): string {
     let date: Date = new Date();
     const month = date.toLocaleString('default', { month: 'short' });
-    const day = date.getDay();
+    const day = date.getDate();
     const year = date.getFullYear();
 
     return `${month} ${day}, ${year}`;
