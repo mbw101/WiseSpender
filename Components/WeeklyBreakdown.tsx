@@ -43,7 +43,6 @@ const WeeklyBreakdown = (props: WeeklyBreakdownProps) => {
 
             <Text style={styles.averageAmountStyle}>${dailyAverage}</Text>
 
-            {/* TODO: Find graph library to use in this component! */}
             <View style={{ height: 200, padding: 5 }}>
                 <BarChart
                     style={{ flex: 1 }}
@@ -52,6 +51,7 @@ const WeeklyBreakdown = (props: WeeklyBreakdownProps) => {
                     yAccessor={({ item }) => item.value}
                     svg={{ fill: '#0C9AEA' }}
                 />
+                {/* TODO: Fix Axis so it lines up properly */}
                 <XAxis
                     data={data}
                     formatLabel={(_, index) => data[index].label}

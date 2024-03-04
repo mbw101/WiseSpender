@@ -28,9 +28,9 @@ function App(): React.JSX.Element {
         }}>
           {/* show HomeScreen once they've added a goal */}
           <TabNavigator.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-          <TabNavigator.Screen name="Archive" component={HistoryScreen} />
-          <TabNavigator.Screen name="Activity" component={ActivityScreen} />
-          <TabNavigator.Screen name="Profile" component={ProfileScreen} />
+          <TabNavigator.Screen name="Archive" component={HistoryScreen} options={{ headerShown: false }} />
+          <TabNavigator.Screen name="Activity" component={ActivityScreen} options={{ headerShown: false }} />
+          <TabNavigator.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
         </TabNavigator.Navigator>
       </NavigationContainer>
     </RootSiblingParent>
