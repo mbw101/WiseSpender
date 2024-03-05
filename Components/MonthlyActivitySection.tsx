@@ -6,6 +6,7 @@ type ActivityEntryProps = {
     year: number;
     data: any; // TODO: Decide structure.
         // maybe [{date: }, {year}, {locations}] ?
+        // Plain old Javascript object
 };
 
 // we will use this to have any number of Activity Entries for a specific month and year

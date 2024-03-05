@@ -79,9 +79,12 @@ const HomeScreenComponent = (props: HomeScreenComponentProps) => {
                 }}>
                     {/* TODO: Add streak info here! */}
                     <Text style={{
-                        fontWeight: 'bold'
+                        fontWeight: 'bold',
+                        fontSize: 24
                     }}>{daysInARow} day streak!</Text>
-                    <Text>{streakMessage}</Text>
+                    <Text style={{
+                        fontSize: 18
+                    }}>{streakMessage}</Text>
                 </View>
 
             </View>

@@ -18,6 +18,7 @@ type AddGoalScreenComponentProps = {
 const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
     const { navigation, setAddedGoal } = props;
     const [goalText, setGoalText] = useState('');
+    const [monthlyExpenseTarget, setMonthlyExpenseTarget] = useState(0);
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState('January');
     const [items, setItems] = useState([
@@ -59,14 +60,42 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
                     }}
                 />
 
+                {/* TODO: Add Monthly expense target */}
+                <Text>Monthly Expense Target</Text>
+                {/* Commas seem to get removed when parsing, so I think we're good for that */}
+                <TextInput
+                    style={styles.input}
+                    id="expenseTargetInput"
+                    value={monthlyExpenseTarget.toString()}
+                    keyboardType="number-pad"
+                    onChangeText={(text) => {
+                        console.log(text);
+                        let monthlyExpense = 0;
+                        // only parse if text is not empty
+                        if (text !== '') {
+                            monthlyExpense = Number.parseInt(text);
+                        }
+                        setMonthlyExpenseTarget(monthlyExpense);
+                    }}
+                />
+                {/* From that amount, we can calculate the daily amount (based on which month it currently is) */}
+
+
                 <TouchableOpacity onPress={() => {
                     // Ensure they don't add an empty goal
-                    if (goalText === '') {
-                        Toast.show('Please enter a goal.', {
-                            duration: Toast.durations.LONG,
-                        });
-                        return;
-                    }
+                    // if (goalText === '') {
+                    //     Toast.show('Please enter a goal.', {
+                    //         duration: Toast.durations.LONG,
+                    //     });
+                    //     return;
+                    // }
+                    // if (monthlyExpenseTarget === 0) {
+                    //     Toast.show('Please enter an expense target greater than $0.', {
+                    //         duration: Toast.durations.LONG,
+                    //     });
+                    //     return; 
+                    // }
+                    // console.log(monthlyExpenseTarget);
 
                     setAddedGoal(true);
                     navigation.navigate('home');

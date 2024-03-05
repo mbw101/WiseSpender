@@ -12,6 +12,7 @@ const WeeklyBreakdown = (props: WeeklyBreakdownProps) => {
     // daily average comes from HomeScreen as a prop since it remains the same throughout the lifecycle
     // until the user adds a transaction (which is done on a separate screen)
     const { dailyAverage, percentageDifference } = props;
+    // TODO: Load in this data as a prop for Milestone 3
     const data = [
         { value: 60, label: 'M' },
         { value: 50, label: 'T' },
@@ -43,7 +44,9 @@ const WeeklyBreakdown = (props: WeeklyBreakdownProps) => {
 
             <Text style={styles.averageAmountStyle}>${dailyAverage}</Text>
 
-            <View style={{ height: 200, padding: 5 }}>
+            {/* TODO: If no entries are made for the week yet, we will show a placeholder text */}
+            {/* TODO: Also, more than likely there will never be 7 bars on the graph, only a subset of them will be shown. */}
+            <View style={{ height: 200 }}>
                 <BarChart
                     style={{ flex: 1 }}
                     data={data}
@@ -51,14 +54,17 @@ const WeeklyBreakdown = (props: WeeklyBreakdownProps) => {
                     yAccessor={({ item }) => item.value}
                     svg={{ fill: '#0C9AEA' }}
                 />
-                {/* TODO: Fix Axis so it lines up properly */}
                 <XAxis
                     data={data}
                     formatLabel={(_, index) => data[index].label}
                     style={{
-                        marginHorizontal: 15,
-                        marginTop: 10,
-                        width: '100%'
+                        marginTop: 5,
+                        marginHorizontal: 0,
+                    }}
+                    // This seems to get the XAxis properly aligned with the BarChart
+                    contentInset={{
+                        left: 25,
+                        right: 25
                     }}
                 />
             </View>
