@@ -42,11 +42,12 @@ const WeeklyBreakdown = (props: WeeklyBreakdownProps) => {
                 </View>
             </View>
 
-            <Text style={styles.averageAmountStyle}>${dailyAverage}</Text>
+            <Text style={styles.averageAmountStyle}>${dailyAverage.toFixed(2)}</Text>
 
             {/* TODO: If no entries are made for the week yet, we will show a placeholder text */}
             {/* TODO: Also, more than likely there will never be 7 bars on the graph, only a subset of them will be shown. */}
             <View style={{ height: 200 }}>
+                {/* TODO: Set the middle of the bar chart as their daily expense target */}
                 <BarChart
                     style={{ flex: 1 }}
                     data={data}

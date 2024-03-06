@@ -20,6 +20,7 @@ type HomeScreenProps = {
 const HomeScreenComponent = (props: HomeScreenComponentProps) => {
     const [spentToday, setSpentToday] = useState(51.89); // fake for milestone 2
     const [dailyAverage, setDailyAverage] = useState(57.75);
+    const [expenseTarget, setExpenseTarget] = useState(48.40);
     // props for the streaks
     const [daysInARow, setDaysInARow] = useState(3); // TODO: Change defaults for milestone 3
     const [streakMessage, setStreakMessage] = useState("You're on fire! Keep up the great habits!");
@@ -60,7 +61,7 @@ const HomeScreenComponent = (props: HomeScreenComponentProps) => {
                 </TouchableOpacity>
 
                 <Text style={{
-                    marginTop: 5,
+                    marginTop: 10,
                 }}>{getUpdateString()}</Text>
 
                 <View style={{
@@ -69,7 +70,15 @@ const HomeScreenComponent = (props: HomeScreenComponentProps) => {
                     justifyContent: 'center',
                 }}>
                     <Text style={styles.defaultTextStyle}>Total Spent Today: </Text>
-                    <Text style={styles.spentStyle}> ${spentToday}</Text>
+                    <Text style={styles.spentStyle}> ${spentToday.toFixed(2)}</Text>
+                </View>
+                <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}>
+                    <Text style={styles.defaultTextStyle}>Target Expenses:</Text>
+                    <Text style={styles.spentStyle}> ${expenseTarget.toFixed(2)}</Text>
                 </View>
 
                 <View style={{

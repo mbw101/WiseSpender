@@ -4,14 +4,26 @@ import { View, Text, StyleSheet } from 'react-native';
 const ProfileScreen = () => {
   return (
     <View style={styles.container}>
-      <Text>Profile Screen</Text>
+      <View style={{
+        paddingTop: 20,
+      }}>
+        <Text>Profile Screen</Text>
+      </View>
+
+      <View>
+        <Text>General</Text>
+      </View>
+
+      <View>
+        <Text>Appearance</Text>
+        {/* TODO: Add dark mode in settings */}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
