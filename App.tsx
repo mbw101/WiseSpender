@@ -1,37 +1,24 @@
 import React, { } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import 'react-native-gesture-handler';
 
-import { StyleSheet, } from 'react-native';
-import HomeScreen from './Screens/HomeScreen.tsx';
-import ActivityScreen from './Screens/ActivityScreen.tsx';
-import HistoryScreen from './Screens/HistoryScreen.tsx';
-import ProfileScreen from './Screens/ProfileScreen.tsx';
+import { StyleSheet, TouchableOpacity} from 'react-native';
+import NewTransactionScreen from './Screens/NewTransactionScreen.tsx';
+import BottomTabNavigator from './Components/BottomTabNavigator.tsx';
 import { RootSiblingParent } from 'react-native-root-siblings';
 
-const TabNavigator = createBottomTabNavigator();
+const StackNavigator = createStackNavigator();
 
 function App(): React.JSX.Element {
 
   return (
     <RootSiblingParent>
       <NavigationContainer>
-        <TabNavigator.Navigator screenOptions={{
-          tabBarActiveTintColor: "blue",
-          tabBarInactiveTintColor: "#fff",
-          tabBarStyle: { backgroundColor: "#000" },
-          tabBarLabelStyle: {
-            fontSize: 15
-          },
-        }}>
-          {/* show HomeScreen once they've added a goal */}
-          <TabNavigator.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-          <TabNavigator.Screen name="Archive" component={HistoryScreen} options={{ headerShown: false }} />
-          <TabNavigator.Screen name="Activity" component={ActivityScreen} options={{ headerShown: false }} />
-          <TabNavigator.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
-        </TabNavigator.Navigator>
+        <StackNavigator.Navigator screenOptions={{headerShown: false}}>
+          <StackNavigator.Screen name='Main' component={BottomTabNavigator}/>
+          <StackNavigator.Screen name="NewTransaction" component={NewTransactionScreen} options={{ presentation: 'modal' }}/>
+        </StackNavigator.Navigator>
       </NavigationContainer>
     </RootSiblingParent>
   );
