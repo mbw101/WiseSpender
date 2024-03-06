@@ -56,7 +56,6 @@ const HomeScreenComponent = (props: HomeScreenComponentProps) => {
                 }}>
                     <Text>See your monthly activity</Text>
                     <AntDesign color="black" size={18} name="arrowright" />
-                    {/* TODO: add arrow icon from react library */}
 
                 </TouchableOpacity>
 
@@ -80,6 +79,8 @@ const HomeScreenComponent = (props: HomeScreenComponentProps) => {
                     <Text style={styles.defaultTextStyle}>Target Expenses:</Text>
                     <Text style={styles.spentStyle}> ${expenseTarget.toFixed(2)}</Text>
                 </View>
+
+                {/* TODO: Can say whether this day is green, yellow, or red? */}
 
                 <View style={{
                     justifyContent: 'center',
