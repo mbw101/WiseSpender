@@ -17,7 +17,7 @@ interface ItemData {
   interface ItemProps {
     symbol: string;
     name: string;
-    selectCurrency: (symbol: string) => void;
+    selectCurrency: (currencyType: string) => void;
   }
 
   const LoadCurrencies: React.FC<ItemProps> = ({symbol,name, selectCurrency, navigation}) => 

@@ -39,7 +39,7 @@ const NewTransactionScreen = ({navigation}) => {
     return `${zday}/${zmonth}/${year}`;
   };
 
-  const onSelectCurrencySelect = (currencyType) => {
+  const onSelectCurrencySelect = (currencyType: string) => {
     setSelectedCurrency(currencyType);
     navigation.goBack();
   };
