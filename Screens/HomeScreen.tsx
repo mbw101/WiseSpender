@@ -29,7 +29,7 @@ const HomeScreenComponent = ({navigation}) => {
         <View style={styles.container}>
             <Text style={styles.dateStyle}>{getCurrentDate()}</Text>
 
-            <TouchableOpacity style={{
+            {/* <TouchableOpacity style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 width: '35%',
@@ -39,7 +39,7 @@ const HomeScreenComponent = ({navigation}) => {
             }}>
                 <AntDesign color="black" size={18} name="arrowleft" />
                 <Text>View Month Goals</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <View style={{
                 marginTop: 15,

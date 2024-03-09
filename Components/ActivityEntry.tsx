@@ -5,12 +5,13 @@ type ActivityEntryProps = {
     date: string; // formatted as '5:23pm'
     dollarAmount: number;
     description: string; // where money was spent
+    currency: string;
 };
 
 // parent will handle which month on the activity screen this entry will be under
 // for example, the 'January' header will contain all January ActivityEntries
 const ActivityEntry = (props: ActivityEntryProps) => {
-    const { date, dollarAmount, description: location } = props;
+    const { date, dollarAmount, description: location, currency } = props;
 
     return (
         <View style={styles.container}>
@@ -23,7 +24,7 @@ const ActivityEntry = (props: ActivityEntryProps) => {
             <View style={{
                 width: '80%'
             }}>
-                <Text style={styles.messageStyle}>You spent ${dollarAmount} on {location}</Text>
+                <Text style={styles.messageStyle}>You spent {currency}{dollarAmount} on {location}</Text>
             </View>
         </View>
     )
