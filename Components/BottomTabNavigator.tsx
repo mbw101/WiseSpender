@@ -23,22 +23,22 @@ const BottomTabNavigator: React.FC = () => {
               let routeName = route.name;
               
               if (routeName === 'Home'){
-                color =  focused ? 'cyan' : 'white';
+                color =  focused ? '#4287f5' : 'white';
                 return <AntDesign color={color} size={24} name="home"/>;
               }
               else if (routeName === 'Archive'){
-                color =  focused ? 'cyan' : 'white';
+                color =  focused ? '#4287f5' : 'white';
                 return <FontAwesome5 color={color} size={22} name="history"/>;
               }
               else if (routeName === 'Transaction'){
                 return <Feather color={color} size={48} name="plus-square"/>;
               }
               else if (routeName === 'Activity'){
-                color =  focused ? 'cyan' : 'white';
+                color =  focused ? '#4287f5' : 'white';
                 return <Feather color={color} size={24} name="activity"/>;
               }
               else if (routeName === 'Profile'){
-                color =  focused ? 'cyan' : 'white';
+                color =  focused ? '#4287f5' : 'white';
                 return <FontAwesome5 color={color} size={24} name="user-circle"/>;
               }
               else {
@@ -46,7 +46,7 @@ const BottomTabNavigator: React.FC = () => {
               }
              
             },
-            tabBarActiveTintColor: "cyan",
+            tabBarActiveTintColor: "#4287f5",
             tabBarInactiveTintColor: "#fff",
             tabBarStyle: { 
               height: 55,
