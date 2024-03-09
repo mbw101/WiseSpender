@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import DatePicker from 'react-native-date-picker';
 
 // custom icons
@@ -21,14 +21,14 @@ import Feather from 'react-native-vector-icons/Feather';
 //   navigation: MainScreenNavigationProp;
 // }
 
-const NewTransactionScreen = ({navigation}) => {
+const NewTransactionScreen = ({ navigation }) => {
   const [desc, setDesc] = useState('');
   const [cost, setCost] = useState('');
   const [date, setDate] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState(' $ ');
   const [open, setOpen] = useState(false);
 
-  const formateDate = rawDate => {
+  const formateDate = (rawDate: Date) => {
     let date = new Date(rawDate);
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
@@ -51,7 +51,22 @@ const NewTransactionScreen = ({navigation}) => {
           <Feather color={'#000'} size={36} name="x" />
         </TouchableOpacity>
         <Text style={styles.displayTitle}>Add Transaction</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Main')}>
+        <TouchableOpacity onPress={() => {
+          console.log({
+            "currency": selectedCurrency,
+            "date": date,
+            "dollarAmount": cost,
+            "description": desc
+          })
+
+          navigation.navigate('Activity', {
+            "currency": selectedCurrency,
+            "date": date,
+            "dollarAmount": cost,
+            "description": desc
+          })
+
+        }}>
           <Text style={styles.saveButton}>Save</Text>
         </TouchableOpacity>
       </View>
@@ -71,8 +86,8 @@ const NewTransactionScreen = ({navigation}) => {
           />
         </View>
         <View style={styles.inputRow}>
-          <TouchableOpacity style={styles.iconBorder} onPress={() => navigation.navigate('CurrencySelector', {selectCurrency: onSelectCurrencySelect})}>
-            <Text style={{fontSize: 18, color: '#000'}}>{selectedCurrency}</Text>
+          <TouchableOpacity style={styles.iconBorder} onPress={() => navigation.navigate('CurrencySelector', { selectCurrency: onSelectCurrencySelect })}>
+            <Text style={{ fontSize: 18, color: '#000' }}>{selectedCurrency}</Text>
           </TouchableOpacity>
           <TextInput
             style={[styles.inputCost, styles.shadowProp]}
@@ -127,7 +142,7 @@ const styles = StyleSheet.create({
   },
   shadowProp: {
     shadowColor: '#171717',
-    shadowOffset: {width: -2, height: 4},
+    shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },

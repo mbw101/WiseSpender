@@ -1,4 +1,4 @@
-import React, { } from 'react';
+import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import 'react-native-gesture-handler';
@@ -18,7 +18,8 @@ function App(): React.JSX.Element {
     <RootSiblingParent>
       <NavigationContainer>
         <StackNavigator.Navigator screenOptions={{headerShown: false}}>
-          <StackNavigator.Screen name='Main' component={BottomTabNavigator}/>
+          <StackNavigator.Screen name='Main' component={BottomTabNavigator} />
+
           <StackNavigator.Screen name='MonthlyActivity' component={MonthlyActivityScreen} options={{ presentation: 'card' }}/>
           <StackNavigator.Screen name="NewTransaction" component={NewTransactionScreen} options={{ presentation: 'modal' }}/>
           <StackNavigator.Screen name="CurrencySelector" component={CurrencySelectorScreen} options={{ presentation: 'modal' }}/>

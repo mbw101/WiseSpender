@@ -4,13 +4,13 @@ import { View, Text, StyleSheet } from 'react-native';
 type ActivityEntryProps = {
     date: string; // formatted as '5:23pm'
     dollarAmount: number;
-    location: string; // where money was spent
+    description: string; // where money was spent
 };
 
 // parent will handle which month on the activity screen this entry will be under
 // for example, the 'January' header will contain all January ActivityEntries
 const ActivityEntry = (props: ActivityEntryProps) => {
-    const { date, dollarAmount, location } = props;
+    const { date, dollarAmount, description: location } = props;
 
     return (
         <View style={styles.container}>
