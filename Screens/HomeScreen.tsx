@@ -17,7 +17,7 @@ type HomeScreenProps = {
     navigation: any;
 };
 
-const HomeScreenComponent = (props: HomeScreenComponentProps) => {
+const HomeScreenComponent = ({navigation}) => {
     const [spentToday, setSpentToday] = useState(51.89); // fake for milestone 2
     const [dailyAverage, setDailyAverage] = useState(57.75);
     // props for the streaks
@@ -52,7 +52,7 @@ const HomeScreenComponent = (props: HomeScreenComponentProps) => {
                     width: "50%",
                     flexDirection: 'row',
                     marginTop: 5,
-                }}>
+                }} onPress={()=> navigation.navigate('MonthlyActivity')}>
                     <Text>See your monthly activity</Text>
                     <AntDesign color="black" size={18} name="arrowright" />
                     {/* TODO: add arrow icon from react library */}
