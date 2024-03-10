@@ -4,17 +4,17 @@ import ActivityEntry from "../Components/ActivityEntry";
 import { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 
-const ActivityScreen = ({ route, navigation }) => {
+const ActivityScreen = ({ route }) => {
 
   const { currency, date, dollarAmount, description } = (route.params !== undefined ? route.params : { "currency": "$", "date": "03/09/2024", "dollarAmount": "25", "description": "Test" });
   // const addedTransaction = route.params;
   const [transactions, setTransactions] = useState<any[]>([]);
+  const updatedTransactions = [...transactions, { "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description }];
 
-  console.log(date);
-  // console.log("Added: ", addedTransaction);
   useEffect(() => {
-    setTransactions([...transactions, { "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description }]);
-  }, []);
+    console.log("Transactions:", transactions);
+    setTransactions(updatedTransactions);
+  }, [dollarAmount]);
 
   return (
     <View style={styles.container}>
@@ -35,7 +35,7 @@ const ActivityScreen = ({ route, navigation }) => {
 
         {
           transactions.map((transaction) => (
-            <ActivityEntry date={transaction.date} dollarAmount={transaction.dollarAmount} description={transaction.description} currency={transaction.currency} />
+            <ActivityEntry date={transaction.date} dollarAmount={transaction.dollarAmount} description={transaction.description} currency={transaction.currency} key={transaction.description + " " + transaction.dollarAmount} />
           ))
         }
       </ScrollView>
