@@ -6,7 +6,7 @@ import { ScrollView } from "react-native-gesture-handler";
 
 const ActivityScreen = ({ route }) => {
 
-  const { currency, date, dollarAmount, description } = (route.params !== undefined ? route.params : { "currency": "$", "date": "03/09/2024", "dollarAmount": "25", "description": "Test" });
+  const { currency, date, dollarAmount, description } = (route.params !== undefined ? route.params : { "currency": "$", "date": "03/09/2024", "dollarAmount": "10.99", "description": "Disney Plus" });
   // const addedTransaction = route.params;
   const [transactions, setTransactions] = useState<any[]>([]);
   const updatedTransactions = [...transactions, { "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description }];
@@ -32,6 +32,9 @@ const ActivityScreen = ({ route }) => {
       <ScrollView>
         <ActivityEntry date={'Mar 1st'} dollarAmount={51.89} description={'Groceries'} currency="$" />
         <ActivityEntry date={'Mar 3rd'} dollarAmount={30.12} description={'Uber Eats'} currency="$" />
+        <ActivityEntry date={'Mar 5th'} dollarAmount={13.99} description={'Fit4less'} currency="$" />
+        <ActivityEntry date={'Mar 8th'} dollarAmount={80.20} description={'Walmart'} currency="$" />
+        <ActivityEntry date={'Mar 9th'} dollarAmount={40.00} description={'Canadian Tire'} currency="$" />
 
         {
           transactions.map((transaction) => (
