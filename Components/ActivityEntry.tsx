@@ -1,5 +1,6 @@
 import * as React from "react";
 import { View, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 type ActivityEntryProps = {
     date: string; // formatted as '5:23pm'
@@ -14,19 +15,22 @@ const ActivityEntry = (props: ActivityEntryProps) => {
     const { date, dollarAmount, description: location, currency } = props;
 
     return (
-        <View style={styles.container}>
+        <TouchableOpacity style={styles.container}>
             <View style={{
-                width: '15%'
+                width: '17%'
             }}>
-                <Text>{date}</Text>
+                <Text style={{
+                    fontSize: 12
+                }}>{date}</Text>
             </View>
 
             <View style={{
-                width: '80%'
+                width: '78%',
+                paddingLeft: 15
             }}>
-                <Text style={styles.messageStyle}>You spent {currency}{dollarAmount} on {location}</Text>
+                <Text style={styles.messageStyle}>You spent {currency.trim()}{dollarAmount} on {location}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -34,6 +38,7 @@ const styles = StyleSheet.create({
     container: {
         borderWidth: 1,
         padding: 15,
+        paddingLeft: 0,
         borderRadius: 10,
         flexDirection: 'row',
         justifyContent: 'center',

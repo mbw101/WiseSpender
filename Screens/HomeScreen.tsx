@@ -29,18 +29,6 @@ const HomeScreenComponent = ({navigation}) => {
         <View style={styles.container}>
             <Text style={styles.dateStyle}>{getCurrentDate()}</Text>
 
-            {/* <TouchableOpacity style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: '35%',
-                borderWidth: 1,
-                marginTop: 15,
-                borderRadius: 5,
-            }}>
-                <AntDesign color="black" size={18} name="arrowleft" />
-                <Text>View Month Goals</Text>
-            </TouchableOpacity> */}
-
             <View style={{
                 marginTop: 15,
             }}>
@@ -81,6 +69,9 @@ const HomeScreenComponent = ({navigation}) => {
                 </View>
 
                 {/* TODO: Can say whether this day is green, yellow, or red? */}
+                <Text>
+                    Monthly Goal: {}
+                </Text>
 
                 <View style={{
                     justifyContent: 'center',

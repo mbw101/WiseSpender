@@ -6,15 +6,41 @@ import { ScrollView } from "react-native-gesture-handler";
 
 const ActivityScreen = ({ route }) => {
 
-  const { currency, date, dollarAmount, description } = (route.params !== undefined ? route.params : { "currency": "$", "date": "03/09/2024", "dollarAmount": "10.99", "description": "Disney Plus" });
-  // const addedTransaction = route.params;
-  const [transactions, setTransactions] = useState<any[]>([]);
+  // destructure optional route params
+  // if route.params is undefined, give empty values
+  const { currency, date, dollarAmount, description } = (route.params !== undefined ? route.params :
+    { "currency": "", "date": "", "dollarAmount": "", "description": "" });
+  // because we know that the format is day/month/year, we can split the string and grab the month
+  // should be a way to convert month num to month name
+
+
+  const [transactions, setTransactions] = useState<any[]>([]); // list of transactions received from NewTransactionScreen
   const updatedTransactions = [...transactions, { "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description }];
+  const [sortedTransactions, setSortedTransactions] = useState(new Map());
+  // const [completeEntries, setCompleteEntries] = useState<Set<any>>(new Set());
 
   useEffect(() => {
-    console.log("Transactions:", transactions);
     setTransactions(updatedTransactions);
+
+    // sort transactions by date into a map
+    for (let i = 0; i < updatedTransactions.length; i++) {
+      const month = updatedTransactions[i].date.split('/')[1];
+      let temp = sortedTransactions;
+      if (sortedTransactions.has(month)) {
+        temp.get(month).push(updatedTransactions[i]);
+      } else {
+        temp.set(month, [updatedTransactions[i]]);
+      }
+      setSortedTransactions(temp);
+    }
+
+    console.log(sortedTransactions);
   }, [dollarAmount]);
+
+  const convertMonthNumToName = (monthNum: string) => {
+    const formatter = new Intl.DateTimeFormat('en', { month: 'long' });
+    return formatter.format(new Date(2024, parseInt(monthNum) - 1, 1));
+  }
 
   return (
     <View style={styles.container}>
@@ -27,18 +53,24 @@ const ActivityScreen = ({ route }) => {
         }}>Recent Activity</Text>
       </View>
 
-      {/* TODO: Figure out how we will dynamically create the months. Or should we have all months? */}
-      <Text>March</Text>
       <ScrollView>
-        <ActivityEntry date={'Mar 1st'} dollarAmount={51.89} description={'Groceries'} currency="$" />
-        <ActivityEntry date={'Mar 3rd'} dollarAmount={30.12} description={'Uber Eats'} currency="$" />
-        <ActivityEntry date={'Mar 5th'} dollarAmount={13.99} description={'Fit4less'} currency="$" />
-        <ActivityEntry date={'Mar 8th'} dollarAmount={80.20} description={'Walmart'} currency="$" />
-        <ActivityEntry date={'Mar 9th'} dollarAmount={40.00} description={'Canadian Tire'} currency="$" />
-
-        {
-          transactions.map((transaction) => (
-            <ActivityEntry date={transaction.date} dollarAmount={transaction.dollarAmount} description={transaction.description} currency={transaction.currency} key={transaction.description + " " + transaction.dollarAmount} />
+        {       
+          Array.from(sortedTransactions.keys()).filter((month) => {
+            return month !== undefined;
+          }).sort().map((month) => (           
+              <View key={month}>
+                <Text style={{
+                  color: 'black',
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  paddingLeft: 10,
+                }}>{convertMonthNumToName(month)}</Text>
+                {
+                  sortedTransactions.get(month).map((transaction) => (
+                    <ActivityEntry date={transaction.date} dollarAmount={transaction.dollarAmount} description={transaction.description} currency={transaction.currency} key={transaction.description + " " + transaction.dollarAmount} />
+                  ))
+                }
+              </View>
           ))
         }
       </ScrollView>

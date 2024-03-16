@@ -13,6 +13,19 @@ export function getUpdateString(): string {
     return `Updated today, ${time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`;
 }
 
+// Formats the date to be in the format 'DD/MM/YY' from CalendarPicker in New/EditTransactionScreen
+export function formateDate(rawDate: Date) {
+  let date = new Date(rawDate);
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  console.log(month);
+  let day = date.getDate();
+
+  const zmonth = month < 10 ? `0${month}` : month;
+  const zday = day < 10 ? `0${day}` : day;
+  return `${zday}/${zmonth}/${year}`;
+};
+
 // {percentageDifference}% from last week
 // returns the string for the Weekly Breakdown indicating
 // whether there's an increase or decrease compared to last week
