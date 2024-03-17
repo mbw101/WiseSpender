@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect } from "react";
 import { View, Text, StyleSheet } from 'react-native';
 import { BarChart, XAxis } from 'react-native-svg-charts'
 
@@ -12,6 +13,8 @@ const WeeklyBreakdown = (props: WeeklyBreakdownProps) => {
     // daily average comes from HomeScreen as a prop since it remains the same throughout the lifecycle
     // until the user adds a transaction (which is done on a separate screen)
     const { dailyAverage, percentageDifference } = props;
+    const [hasData, setHasData] = React.useState(false);
+
     // TODO: Load in this data as a prop for Milestone 3
     const data = [
         { value: 60, label: 'M' },
@@ -22,6 +25,14 @@ const WeeklyBreakdown = (props: WeeklyBreakdownProps) => {
         { value: 50, label: 'S' },
         { value: 60, label: 'S' }
     ]
+
+    useEffect(() => {
+        // TODO: Load weekly data from the database, otherwise show placeholder text
+
+        // if there is data, set hasData to true
+
+    }, []);
+
     return (
         <View style={styles.container}>
             <View style={{
@@ -44,31 +55,45 @@ const WeeklyBreakdown = (props: WeeklyBreakdownProps) => {
 
             <Text style={styles.averageAmountStyle}>${dailyAverage.toFixed(2)}</Text>
 
-            {/* TODO: If no entries are made for the week yet, we will show a placeholder text */}
             {/* TODO: Also, more than likely there will never be 7 bars on the graph, only a subset of them will be shown. */}
-            <View style={{ height: 200 }}>
-                {/* TODO: Set the middle of the bar chart as their daily expense target */}
-                <BarChart
-                    style={{ flex: 1 }}
-                    data={data}
-                    gridMin={0}
-                    yAccessor={({ item }) => item.value}
-                    svg={{ fill: '#0C9AEA' }}
-                />
-                <XAxis
-                    data={data}
-                    formatLabel={(_, index) => data[index].label}
-                    style={{
-                        marginTop: 5,
-                        marginHorizontal: 0,
-                    }}
-                    // This seems to get the XAxis properly aligned with the BarChart
-                    contentInset={{
-                        left: 25,
-                        right: 25
-                    }}
-                />
-            </View>
+
+            {
+                hasData ?
+                    <View style={{ height: 200 }}>
+                        {/* TODO: Set the middle of the bar chart as their daily expense target */}
+                        <BarChart
+                            style={{ flex: 1 }}
+                            data={data}
+                            gridMin={0}
+                            yAccessor={({ item }) => item.value}
+                            svg={{ fill: '#0C9AEA' }}
+                        />
+                        <XAxis
+                            data={data}
+                            formatLabel={(_, index) => data[index].label}
+                            style={{
+                                marginTop: 5,
+                                marginHorizontal: 0,
+                            }}
+                            // This seems to get the XAxis properly aligned with the BarChart
+                            contentInset={{
+                                left: 25,
+                                right: 25
+                            }}
+                        />
+                    </View>
+                    :
+                    <View>
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                marginTop: 20,
+                                fontSize: 20
+                            }}>
+                            No data to display for this week
+                        </Text>
+                    </View>
+            }
         </View>
     )
 }
