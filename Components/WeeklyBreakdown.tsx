@@ -30,30 +30,39 @@ const WeeklyBreakdown = (props: WeeklyBreakdownProps) => {
         // TODO: Load weekly data from the database, otherwise show placeholder text
 
         // if there is data, set hasData to true
-
     }, []);
 
     return (
         <View style={styles.container}>
-            <View style={{
-                flexDirection: 'row',
-            }}>
-                <View style={{
-                    flexDirection: 'row',
-                    width: '65%'
-                }}>
-                    <Text style={styles.defaultTextStyle}>Daily Average</Text>
-                </View>
+            {
+                hasData ?
+                    <View style={{
+                        flexDirection: 'row',
+                    }}>
+                        <View style={{
+                            flexDirection: 'row',
+                            width: '65%'
+                        }}>
+                            <Text style={styles.defaultTextStyle}>Daily Average</Text>
+                        </View>
 
-                <View style={{
-                    flexDirection: 'row',
-                    width: '40%' // right now this is how I have it align to the right
-                }}>
-                    <Text>{percentageDifference}% from last week</Text>
-                </View>
-            </View>
+                        <View style={{
+                            flexDirection: 'row',
+                            width: '40%' // right now this is how I have it align to the right
+                        }}>
+                            <Text>{percentageDifference}% from last week</Text>
+                        </View>
+                    </View>
+                    :
+                    null
+            }
 
-            <Text style={styles.averageAmountStyle}>${dailyAverage.toFixed(2)}</Text>
+            {
+                hasData ?
+                    <Text style={styles.averageAmountStyle}>${dailyAverage.toFixed(2)}</Text>
+                    :
+                    null
+            }
 
             {/* TODO: Also, more than likely there will never be 7 bars on the graph, only a subset of them will be shown. */}
 
@@ -83,7 +92,11 @@ const WeeklyBreakdown = (props: WeeklyBreakdownProps) => {
                         />
                     </View>
                     :
-                    <View>
+                    <View style={{
+                        // we could either have the height match whether there is data (so graph is present) or not. Or we could have it take less whitespace
+                        height: 200,
+                        justifyContent: 'center',
+                    }}>
                         <Text
                             style={{
                                 textAlign: 'center',
