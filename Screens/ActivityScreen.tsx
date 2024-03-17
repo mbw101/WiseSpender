@@ -4,7 +4,7 @@ import ActivityEntry from "../Components/ActivityEntry";
 import { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 
-const ActivityScreen = ({ route }) => {
+const ActivityScreen = ({ route, navigation }) => {
 
   // destructure optional route params
   // if route.params is undefined, give empty values
@@ -54,23 +54,40 @@ const ActivityScreen = ({ route }) => {
       </View>
 
       <ScrollView>
-        {       
+        {
           Array.from(sortedTransactions.keys()).filter((month) => {
             return month !== undefined;
-          }).sort().map((month) => (           
-              <View key={month}>
-                <Text style={{
-                  color: 'black',
-                  fontSize: 20,
-                  fontWeight: 'bold',
-                  paddingLeft: 10,
-                }}>{convertMonthNumToName(month)}</Text>
-                {
-                  sortedTransactions.get(month).map((transaction) => (
-                    <ActivityEntry date={transaction.date} dollarAmount={transaction.dollarAmount} description={transaction.description} currency={transaction.currency} key={transaction.description + " " + transaction.dollarAmount} />
-                  ))
-                }
-              </View>
+          }).sort().map((month) => (
+            <View key={month}>
+              <Text style={{
+                color: 'black',
+                fontSize: 20,
+                fontWeight: 'bold',
+                paddingLeft: 10,
+              }}>{convertMonthNumToName(month)}</Text>
+              {
+                sortedTransactions.get(month).map((transaction) => (
+                  <ActivityEntry
+                    date={transaction.date}
+                    dollarAmount={transaction.dollarAmount}
+                    description={transaction.description}
+                    currency={transaction.currency}
+                    key={transaction.description + " " + transaction.dollarAmount}
+                    editTransaction={() => { 
+                      console.log("editTransaction");
+
+                      // navigate to EditTransactionScreen
+                      navigation.navigate('EditTransaction', {
+                        "currency": transaction.currency,
+                        "date": transaction.date,
+                        "dollarAmount": transaction.dollarAmount,
+                        "description": transaction.description
+                      });
+                    }}
+                  />
+                ))
+              }
+            </View>
           ))
         }
       </ScrollView>

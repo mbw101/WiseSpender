@@ -33,7 +33,7 @@ const EditTransactionScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Feather color={'#000'} size={36} name="x" />
         </TouchableOpacity>
-        <Text style={styles.displayTitle}>Add Transaction</Text>
+        <Text style={styles.displayTitle}>Edit Transaction</Text>
         <TouchableOpacity onPress={() => {
           console.log({
             "currency": selectedCurrency,
@@ -43,6 +43,7 @@ const EditTransactionScreen = ({ navigation }) => {
           })
 
           // TODO: Modify the existing transaction in the database
+          // TODO: We'll have to make sure that the correct entry gets updated (Rather than creating a new entry in Activity Screen)
           navigation.navigate('Activity', {
             "currency": selectedCurrency,
             "date": date,

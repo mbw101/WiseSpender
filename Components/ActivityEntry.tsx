@@ -7,15 +7,20 @@ type ActivityEntryProps = {
     dollarAmount: number;
     description: string; // where money was spent
     currency: string;
+    editTransaction: () => void;
 };
 
 // parent will handle which month on the activity screen this entry will be under
 // for example, the 'January' header will contain all January ActivityEntries
 const ActivityEntry = (props: ActivityEntryProps) => {
-    const { date, dollarAmount, description: location, currency } = props;
+    const { date, dollarAmount, description: location, currency, editTransaction } = props;
 
     return (
-        <TouchableOpacity style={styles.container}>
+        // add onPress to navigate to an edit screen for the transaction
+        <TouchableOpacity style={styles.container} onPress={() => {
+            console.log("editTransaction");
+            editTransaction()
+        }}>
             <View style={{
                 width: '17%'
             }}>

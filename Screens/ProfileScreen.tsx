@@ -77,6 +77,8 @@ const ProfileScreen = () => {
           <Dialog.Button label="Save" onPress={handleSave} />
         </Dialog.Container>
       </View>
+
+      {/* TODO: Allow editing current goal */}
     </View>
   );
 };
