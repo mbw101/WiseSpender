@@ -42,7 +42,7 @@ const ProfileScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.title}>
-        <Text>Profile Screen</Text>
+        <Text style={styles.profileScreenTitle}>Profile Screen</Text>
       </View>
 
       <View>
@@ -92,8 +92,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  profileScreenTitle: {
+    color: 'black',
+  },
   preferenceTitle: {
-    fontSize: 18
+    fontSize: 18,
+    color: 'black',
   },
   preferenceSection: {
     fontSize: 16,
