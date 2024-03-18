@@ -15,6 +15,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import { formateDate } from '../Helpers';
 
+
 //define navigation type
 // type MainScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Main'>;
 

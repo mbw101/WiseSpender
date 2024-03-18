@@ -1,12 +1,13 @@
 import * as React from "react";
 import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AddGoalScreen from "./AddGoalScreen";
 import InitialScreen from "./InitialScreen";
 import { getCurrentDate, getUpdateString } from "../Helpers";
 import WeeklyBreakdown from "../Components/WeeklyBreakdown";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import loadData from "./mySql.tsx";
 
 const Stack = createNativeStackNavigator();
 
@@ -96,7 +97,10 @@ const HomeScreenComponent = ({ navigation }) => {
 const HomeScreen = (props: HomeScreenProps) => {
     const [addedGoal, setAddedGoal] = useState(false);
     console.log("addedGoal: ", addedGoal);
-
+    // useEffect(()=> {
+    //     loadData();
+    // }, [loadData]);
+loadData();
     return (
         <Stack.Navigator>
             {addedGoal ? null : <Stack.Screen name="initial" component={InitialScreen} options={{ headerShown: false }} />}

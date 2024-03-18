@@ -13,7 +13,7 @@ const WeeklyBreakdown = (props: WeeklyBreakdownProps) => {
     // daily average comes from HomeScreen as a prop since it remains the same throughout the lifecycle
     // until the user adds a transaction (which is done on a separate screen)
     const { dailyAverage, percentageDifference } = props;
-    const [hasData, setHasData] = React.useState(false);
+    const [hasData, setHasData] = React.useState(true);
 
     // TODO: Load in this data as a prop for Milestone 3
     const data = [
