@@ -1,31 +1,41 @@
 import * as React from "react";
 import { View, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 type ActivityEntryProps = {
     date: string; // formatted as '5:23pm'
     dollarAmount: number;
-    location: string; // where money was spent
+    description: string; // where money was spent
+    currency: string;
+    editTransaction: () => void;
 };
 
 // parent will handle which month on the activity screen this entry will be under
 // for example, the 'January' header will contain all January ActivityEntries
 const ActivityEntry = (props: ActivityEntryProps) => {
-    const { date, dollarAmount, location } = props;
+    const { date, dollarAmount, description: location, currency, editTransaction } = props;
 
     return (
-        <View style={styles.container}>
+        // add onPress to navigate to an edit screen for the transaction
+        <TouchableOpacity style={styles.container} onPress={() => {
+            console.log("editTransaction");
+            editTransaction()
+        }}>
             <View style={{
-                width: '15%'
+                width: '17%'
             }}>
-                <Text>{date}</Text>
+                <Text style={{
+                    fontSize: 12
+                }}>{date}</Text>
             </View>
 
             <View style={{
-                width: '80%'
+                width: '78%',
+                paddingLeft: 15
             }}>
-                <Text style={styles.messageStyle}>You spent ${dollarAmount} on {location}</Text>
+                <Text style={styles.messageStyle}>You spent {currency.trim()}{dollarAmount} on {location}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -33,6 +43,7 @@ const styles = StyleSheet.create({
     container: {
         borderWidth: 1,
         padding: 15,
+        paddingLeft: 0,
         borderRadius: 10,
         flexDirection: 'row',
         justifyContent: 'center',

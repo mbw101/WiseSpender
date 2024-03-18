@@ -15,14 +15,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import { formateDate } from '../Helpers';
 
-//define navigation type
-// type MainScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Main'>;
-
-// interface Props {
-//   navigation: MainScreenNavigationProp;
-// }
-
-const NewTransactionScreen = ({ navigation }) => {
+const EditTransactionScreen = ({ navigation }) => {
   const [desc, setDesc] = useState('');
   const [cost, setCost] = useState('');
   const [date, setDate] = useState('');
@@ -33,14 +26,14 @@ const NewTransactionScreen = ({ navigation }) => {
     setSelectedCurrency(currencyType);
     navigation.goBack();
   };
-  console.log(date);
+
   return (
     <View style={styles.container}>
       <View style={styles.navHeader}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Feather color={'#000'} size={36} name="x" />
         </TouchableOpacity>
-        <Text style={styles.displayTitle}>Add Transaction</Text>
+        <Text style={styles.displayTitle}>Edit Transaction</Text>
         <TouchableOpacity onPress={() => {
           console.log({
             "currency": selectedCurrency,
@@ -49,6 +42,8 @@ const NewTransactionScreen = ({ navigation }) => {
             "description": desc
           })
 
+          // TODO: Modify the existing transaction in the database
+          // TODO: We'll have to make sure that the correct entry gets updated (Rather than creating a new entry in Activity Screen)
           navigation.navigate('Activity', {
             "currency": selectedCurrency,
             "date": date,
@@ -204,4 +199,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NewTransactionScreen;
+export default EditTransactionScreen;

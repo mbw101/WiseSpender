@@ -17,9 +17,10 @@ type HomeScreenProps = {
     navigation: any;
 };
 
-const HomeScreenComponent = ({navigation}) => {
+const HomeScreenComponent = ({ navigation }) => {
     const [spentToday, setSpentToday] = useState(51.89); // fake for milestone 2
     const [dailyAverage, setDailyAverage] = useState(57.75);
+    const [expenseTarget, setExpenseTarget] = useState(48.40);
     // props for the streaks
     const [daysInARow, setDaysInARow] = useState(3); // TODO: Change defaults for milestone 3
     const [streakMessage, setStreakMessage] = useState("You're on fire! Keep up the great habits!");
@@ -27,18 +28,6 @@ const HomeScreenComponent = ({navigation}) => {
     return (
         <View style={styles.container}>
             <Text style={styles.dateStyle}>{getCurrentDate()}</Text>
-
-            <TouchableOpacity style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: '35%',
-                borderWidth: 1,
-                marginTop: 15,
-                borderRadius: 5,
-            }}>
-                <AntDesign color="black" size={18} name="arrowleft" />
-                <Text>View Month Goals</Text>
-            </TouchableOpacity>
 
             <View style={{
                 marginTop: 15,
@@ -52,15 +41,14 @@ const HomeScreenComponent = ({navigation}) => {
                     width: "50%",
                     flexDirection: 'row',
                     marginTop: 5,
-                }} onPress={()=> navigation.navigate('MonthlyActivity')}>
+                }} onPress={() => navigation.navigate('MonthlyActivity')}>
                     <Text>See your monthly activity</Text>
                     <AntDesign color="black" size={18} name="arrowright" />
-                    {/* TODO: add arrow icon from react library */}
 
                 </TouchableOpacity>
 
                 <Text style={{
-                    marginTop: 5,
+                    marginTop: 10,
                 }}>{getUpdateString()}</Text>
 
                 <View style={{
@@ -69,8 +57,21 @@ const HomeScreenComponent = ({navigation}) => {
                     justifyContent: 'center',
                 }}>
                     <Text style={styles.defaultTextStyle}>Total Spent Today: </Text>
-                    <Text style={styles.spentStyle}> ${spentToday}</Text>
+                    <Text style={styles.spentStyle}> ${spentToday.toFixed(2)}</Text>
                 </View>
+                <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}>
+                    <Text style={styles.defaultTextStyle}>Target Expenses:</Text>
+                    <Text style={styles.spentStyle}> ${expenseTarget.toFixed(2)}</Text>
+                </View>
+
+                {/* TODO: Can say whether this day is green, yellow, or red? */}
+                <Text>
+                    Monthly Goal: { }
+                </Text>
 
                 <View style={{
                     justifyContent: 'center',
@@ -94,14 +95,19 @@ const HomeScreenComponent = ({navigation}) => {
 
 const HomeScreen = (props: HomeScreenProps) => {
     const [addedGoal, setAddedGoal] = useState(false);
+    console.log("addedGoal: ", addedGoal);
 
     return (
         <Stack.Navigator>
-            <Stack.Screen name="initial" component={InitialScreen} options={{ headerShown: false }} />
+            {addedGoal ? null : <Stack.Screen name="initial" component={InitialScreen} options={{ headerShown: false }} />}
+
             <Stack.Screen name="home" component={HomeScreenComponent} options={{ headerShown: false }} />
-            <Stack.Screen name="addGoal" options={{ headerShown: false }}>
-                {props => <AddGoalScreen navigation={props.navigation} setAddedGoal={setAddedGoal} />}
-            </Stack.Screen>
+            {addedGoal ? null :
+                <Stack.Screen name="addGoal" options={{ headerShown: false }}>
+                    {props => <AddGoalScreen navigation={props.navigation} setAddedGoal={setAddedGoal} />}
+                </Stack.Screen>
+            }
+
         </Stack.Navigator>
     );
 }
