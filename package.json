@@ -41,6 +41,7 @@
     "@react-native/typescript-config": "0.73.1",
     "@types/d3-scale": "^4.0.8",
     "@types/react": "^18.2.6",
+    "@types/react-native-sqlite-storage": "^6.0.5",
     "@types/react-native-svg-charts": "^5.0.16",
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.6.3",
