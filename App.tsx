@@ -10,7 +10,7 @@ import CurrencySelectorScreen from './Screens/CurrencySelectorScreen.tsx';
 import MonthlyActivityScreen from './Screens/MonthlyActivityScreen.tsx';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import EditTransactionScreen from './Screens/EditTransactionScreen.tsx';
-import { createTables, getDBConnection } from './Screens/mySql.tsx';
+import { createTables, displayTables, getDBConnection } from './Screens/mySql.tsx';
 
 const StackNavigator = createStackNavigator();
 
@@ -18,8 +18,8 @@ function App(): React.JSX.Element {
 
   const loadData = useCallback(async () => {
     try {
-      const db = await getDBConnection()
-      await createTables(db)
+      const db = await getDBConnection();
+      await createTables(db);
       console.log('Tables created');
     } catch (error) {
       console.error(error)
