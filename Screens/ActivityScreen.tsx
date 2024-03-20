@@ -18,11 +18,14 @@ const ActivityScreen = ({ route, navigation }) => {
   const [transactions, setTransactions] = useState<any[]>([]); // list of transactions received from NewTransactionScreen
   const updatedTransactions = [...transactions, { "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description }];
   const [sortedTransactions, setSortedTransactions] = useState(new Map());
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // default only show current year 
+
   // const [completeEntries, setCompleteEntries] = useState<Set<any>>(new Set());
 
   useEffect(() => {
     console.log("ActivityScreen");
     console.log(date, description, dollarAmount, currency);
+    console.log("Selected year:", selectedYear);
 
     setTransactions(updatedTransactions);
 
@@ -82,26 +85,29 @@ const ActivityScreen = ({ route, navigation }) => {
                 paddingLeft: 10,
               }}>{convertMonthNumToName(month)}</Text>
               {
-                sortedTransactions.get(month).map((transaction) => (
-                  <ActivityEntry
-                    date={transaction.date}
-                    dollarAmount={transaction.dollarAmount}
-                    description={transaction.description}
-                    currency={transaction.currency}
-                    key={Math.random()}
-                    editTransaction={() => { 
-                      console.log("editTransaction");
+                sortedTransactions.get(month).map((transaction) => {
+                  return transaction.date.split('/')[2] === selectedYear.toString() ?
+                    <ActivityEntry
+                      date={transaction.date}
+                      dollarAmount={transaction.dollarAmount}
+                      description={transaction.description}
+                      currency={transaction.currency}
+                      key={Math.random()}
+                      editTransaction={() => {
+                        console.log("editTransaction");
 
-                      // navigate to EditTransactionScreen
-                      navigation.navigate('EditTransaction', {
-                        "ogCurrency": transaction.currency,
-                        "ogDate": transaction.date,
-                        "ogDollarAmount": transaction.dollarAmount,
-                        "ogDescription": transaction.description
-                      });
-                    }}
-                  />
-                ))
+                        // navigate to EditTransactionScreen
+                        navigation.navigate('EditTransaction', {
+                          "ogCurrency": transaction.currency,
+                          "ogDate": transaction.date,
+                          "ogDollarAmount": transaction.dollarAmount,
+                          "ogDescription": transaction.description
+                        });
+                      }}
+                    />
+                    :
+                    null;
+                })
               }
             </View>
           ))

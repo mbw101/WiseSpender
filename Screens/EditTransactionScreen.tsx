@@ -110,16 +110,20 @@ const EditTransactionScreen = ({ navigation, route }) => {
             id="costInput"
             value={cost}
             onChangeText={input => {
-              // if the input is empty, set it back to the original cost
-              if (input == '') {
-                setCost(ogDollarAmount);
-                return;
-              }
-
               setCost(input);
             }}
             placeholder={ogDollarAmount}
             keyboardType="numeric"
+            onEndEditing={() => {
+              // if the input is empty, set it back to the original cost
+              console.log("onEndEditing");
+              
+              // if the input is empty, set it back to the original cost
+              if (cost == '') {
+                setCost(ogDollarAmount);
+                return;
+              }
+            }}
           />
         </View>
         <View style={styles.inputRow}>
@@ -146,8 +150,6 @@ const EditTransactionScreen = ({ navigation, route }) => {
         </View>
       </View>
       {/* Convert ogDate (sting) to the Date object for DatePicker 
-      
-      year, month - 1, day
       */}
       <DatePicker
         modal
