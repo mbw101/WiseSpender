@@ -19,6 +19,7 @@ const EditTransactionScreen = ({ navigation }) => {
   const [desc, setDesc] = useState('');
   const [cost, setCost] = useState('');
   const [date, setDate] = useState('');
+  const [description, setDescription] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState(' $ ');
   const [open, setOpen] = useState(false);
 
@@ -39,7 +40,7 @@ const EditTransactionScreen = ({ navigation }) => {
             "currency": selectedCurrency,
             "date": date,
             "dollarAmount": cost,
-            "description": desc
+            "location": description
           })
 
           // TODO: Modify the existing transaction in the database
@@ -48,7 +49,7 @@ const EditTransactionScreen = ({ navigation }) => {
             "currency": selectedCurrency,
             "date": date,
             "dollarAmount": cost,
-            "description": desc
+            "description": description
           })
 
         }}>

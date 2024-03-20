@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import ActivityEntry from "../Components/ActivityEntry";
 import { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ActivityScreen = ({ route, navigation }) => {
 
@@ -20,6 +21,9 @@ const ActivityScreen = ({ route, navigation }) => {
   // const [completeEntries, setCompleteEntries] = useState<Set<any>>(new Set());
 
   useEffect(() => {
+    console.log("ActivityScreen");
+    console.log(date, description, dollarAmount, currency);
+
     setTransactions(updatedTransactions);
 
     // sort transactions by date into a map
@@ -34,8 +38,20 @@ const ActivityScreen = ({ route, navigation }) => {
       setSortedTransactions(temp);
     }
 
-    console.log(sortedTransactions);
+    console.log("Sorted transactions: ", sortedTransactions);
   }, [dollarAmount]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("ActivityScreen focused");
+      // console.log("Sorted transactions: ", sortedTransactions);
+      return () => {
+        console.log("ActivityScreen unfocused");
+        // Clean up transactions since screen is unfocused
+        setTransactions([]);
+      };
+    }, [])
+  );
 
   const convertMonthNumToName = (monthNum: string) => {
     const formatter = new Intl.DateTimeFormat('en', { month: 'long' });
@@ -72,7 +88,7 @@ const ActivityScreen = ({ route, navigation }) => {
                     dollarAmount={transaction.dollarAmount}
                     description={transaction.description}
                     currency={transaction.currency}
-                    key={transaction.description + " " + transaction.dollarAmount}
+                    key={Math.random()}
                     editTransaction={() => { 
                       console.log("editTransaction");
 
