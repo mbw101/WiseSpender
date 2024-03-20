@@ -83,19 +83,19 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
         <TouchableOpacity
           onPress={() => {
             // Ensure they don't add an empty goal
-            // if (goalText === '') {
-            //     Toast.show('Please enter a goal.', {
-            //         duration: Toast.durations.LONG,
-            //     });
-            //     return;
-            // }
-            // if (monthlyExpenseTarget === 0) {
-            //     Toast.show('Please enter an expense target greater than $0.', {
-            //         duration: Toast.durations.LONG,
-            //     });
-            //     return;
-            // }
-            // console.log(monthlyExpenseTarget);
+            if (goalText === '') {
+                Toast.show('Please enter a goal.', {
+                    duration: Toast.durations.LONG,
+                });
+                return;
+            }
+            if (monthlyExpenseTarget === 0) {
+                Toast.show('Please enter an expense target greater than $0.', {
+                    duration: Toast.durations.LONG,
+                });
+                return;
+            }
+            console.log(monthlyExpenseTarget);
 
             setAddedGoal(true);
             navigation.navigate('home');
