@@ -94,10 +94,10 @@ const ActivityScreen = ({ route, navigation }) => {
 
                       // navigate to EditTransactionScreen
                       navigation.navigate('EditTransaction', {
-                        "currency": transaction.currency,
-                        "date": transaction.date,
-                        "dollarAmount": transaction.dollarAmount,
-                        "description": transaction.description
+                        "ogCurrency": transaction.currency,
+                        "ogDate": transaction.date,
+                        "ogDollarAmount": transaction.dollarAmount,
+                        "ogDescription": transaction.description
                       });
                     }}
                   />
