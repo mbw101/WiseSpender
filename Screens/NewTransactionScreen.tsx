@@ -15,6 +15,8 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import { formateDate } from '../Helpers';
 
+import { createTables, displayTables,insertTransaction, getDBConnection } from './mySql.tsx';
+
 
 //define navigation type
 // type MainScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Main'>;
@@ -56,6 +58,17 @@ const NewTransactionScreen = ({ navigation }) => {
             "dollarAmount": cost,
             "description": desc
           })
+
+          // todo: insert to table
+          console.log([selectedCurrency,Number(date.substring(0,2)),Number(date.substring(4,5)),Number(date.substring(6,10)),cost,desc]);
+          const insert = async() => {
+            const db = await getDBConnection();
+            await insertTransaction(db,[selectedCurrency,Number(date.substring(0,1)),Number(date.substring(3,4)),Number(date.substring(6,9)),cost,desc]);
+            const res =  await displayTables(db);
+            console.log(res);
+            
+          }
+          insert();
 
         }}>
           <Text style={styles.saveButton}>Save</Text>

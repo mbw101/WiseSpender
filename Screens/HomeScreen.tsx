@@ -7,7 +7,7 @@ import InitialScreen from "./InitialScreen";
 import { getCurrentDate, getUpdateString } from "../Helpers";
 import WeeklyBreakdown from "../Components/WeeklyBreakdown";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import { createTables, getDBConnection } from "./mySql.tsx";
+import { createTables, getDBConnection, displayTables} from "./mySql.tsx";
 
 const Stack = createNativeStackNavigator();
 
