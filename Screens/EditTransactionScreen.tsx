@@ -103,7 +103,7 @@ const EditTransactionScreen = ({ navigation, route }) => {
         </View>
         <View style={styles.inputRow}>
           <TouchableOpacity style={styles.iconBorder} onPress={() => navigation.navigate('CurrencySelector', { selectCurrency: onSelectCurrencySelect })}>
-            <Text style={{ fontSize: 18, color: '#000' }}>{selectedCurrency}</Text>
+            <Text style={{ fontSize: 18, color: '#000' }}>{ogCurrency}</Text>
           </TouchableOpacity>
           <TextInput
             style={[styles.inputCost, styles.shadowProp]}
