@@ -16,6 +16,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import { formateDate } from '../Helpers';
 
 import { createTables, displayTables,insertTransaction, getDBConnection } from './mySql.tsx';
+import Toast from 'react-native-root-toast';
 
 
 //define navigation type
@@ -28,9 +29,26 @@ import { createTables, displayTables,insertTransaction, getDBConnection } from '
 const NewTransactionScreen = ({ navigation }) => {
   const [desc, setDesc] = useState('');
   const [cost, setCost] = useState('');
+  // const [cost, setCost] = useState<number>(0.0);
   const [date, setDate] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState(' $ ');
   const [open, setOpen] = useState(false);
+
+
+  const updateCost = (input: string) => {
+    // if (input === '') {
+    //   return;
+    // }
+
+    // const parsedCost = parseFloat(input);
+
+    // // cost is not a number (still a string or invalid input)
+    // if (isNaN(parsedCost)) {
+    //   return;
+    // }
+
+    setCost(input);
+  };
 
   const onSelectCurrencySelect = (currencyType: string) => {
     setSelectedCurrency(currencyType);
@@ -45,6 +63,24 @@ const NewTransactionScreen = ({ navigation }) => {
         </TouchableOpacity>
         <Text style={styles.displayTitle}>Add Transaction</Text>
         <TouchableOpacity onPress={() => {
+          // check for invalid inputs
+          if (desc === '' || date === '') {
+            Toast.show('All fields must be filed', {
+              duration: Toast.durations.LONG,
+            });
+            return;
+          }
+
+          // see if cost is not a number
+
+          if (Number(cost) <= 0) {
+            Toast.show('Cost must be greater than $0', {
+              duration: Toast.durations.LONG,
+            });
+            return;
+          }
+
+
           console.log({
             "currency": selectedCurrency,
             "date": date,
@@ -96,10 +132,8 @@ const NewTransactionScreen = ({ navigation }) => {
           <TextInput
             style={[styles.inputCost, styles.shadowProp]}
             id="costInput"
-            value={cost}
-            onChangeText={input => {
-              setCost(input);
-            }}
+            value={cost.toString()}
+            onChangeText={updateCost}
             placeholder="0.00"
             keyboardType="numeric"
           />

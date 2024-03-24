@@ -95,6 +95,7 @@ const ActivityScreen = ({ route, navigation }) => {
                       key={Math.random()}
                       editTransaction={() => {
                         console.log("editTransaction");
+                        console.log(transaction.currency, transaction.date, transaction.dollarAmount, transaction.description);
 
                         // navigate to EditTransactionScreen
                         navigation.navigate('EditTransaction', {

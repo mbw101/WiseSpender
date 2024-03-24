@@ -89,7 +89,7 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
                 });
                 return;
             }
-            if (monthlyExpenseTarget === 0) {
+            if (monthlyExpenseTarget <= 0) {
                 Toast.show('Please enter an expense target greater than $0.', {
                     duration: Toast.durations.LONG,
                 });

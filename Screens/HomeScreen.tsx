@@ -7,7 +7,8 @@ import InitialScreen from "./InitialScreen";
 import { getCurrentDate, getUpdateString } from "../Helpers";
 import WeeklyBreakdown from "../Components/WeeklyBreakdown";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import { createTables, getDBConnection, displayTables} from "./mySql.tsx";
+import { createTables, getDBConnection, displayTables } from "./mySql.tsx";
+import { FireFilled } from "@ant-design/icons";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,11 +25,25 @@ const HomeScreenComponent = ({ navigation }) => {
     const [expenseTarget, setExpenseTarget] = useState(48.40);
     // props for the streaks
     const [daysInARow, setDaysInARow] = useState(3); // TODO: Change defaults for milestone 3
-    const [streakMessage, setStreakMessage] = useState("You're on fire! Keep up the great habits!");
 
     return (
         <View style={styles.container}>
-            <Text style={styles.dateStyle}>{getCurrentDate()}</Text>
+            <View style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+            }}>
+                <Text style={styles.dateStyle}>{getCurrentDate()}</Text>
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    width: 60,
+                }}>
+                    {/* TODO: Get Fire icon working */}
+                    {/* <FireFilled /> */}
+                    <Text>3 days</Text>
+                </View>
+            </View>
 
             <View style={{
                 marginTop: 15,
@@ -53,42 +68,30 @@ const HomeScreenComponent = ({ navigation }) => {
                 }}>{getUpdateString()}</Text>
 
                 <View style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    marginTop: 150,
                 }}>
-                    <Text style={styles.defaultTextStyle}>Total Spent Today: </Text>
-                    <Text style={styles.spentStyle}> ${spentToday.toFixed(2)}</Text>
-                </View>
-                <View style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}>
-                    <Text style={styles.defaultTextStyle}>Target Expenses:</Text>
-                    <Text style={styles.spentStyle}> ${expenseTarget.toFixed(2)}</Text>
-                </View>
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}>
+                        <Text style={styles.defaultTextStyle}>Total Spent Today: </Text>
+                        <Text style={styles.spentStyle}> ${spentToday.toFixed(2)}</Text>
+                    </View>
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}>
+                        <Text style={styles.defaultTextStyle}>Target Expenses:</Text>
+                        <Text style={styles.spentStyle}> ${expenseTarget.toFixed(2)}</Text>
+                    </View>
 
-                {/* TODO: Can say whether this day is green, yellow, or red? */}
-                <Text>
-                    Monthly Goal: { }
-                </Text>
-
-                <View style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: 60
-                }}>
-                    {/* TODO: Add streak info here! */}
-                    <Text style={{
-                        fontWeight: 'bold',
-                        fontSize: 24
-                    }}>{daysInARow} day streak!</Text>
-                    <Text style={{
-                        fontSize: 18
-                    }}>{streakMessage}</Text>
+                    {/* TODO: Can say whether this day is green, yellow, or red? */}
+                    <Text>
+                        Monthly Goal: { }
+                    </Text>
                 </View>
-
             </View>
         </View >
     );
