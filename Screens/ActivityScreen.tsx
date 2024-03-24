@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import ActivityEntry from "../Components/ActivityEntry";
 import { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ActivityScreen = ({ route, navigation }) => {
 
@@ -17,9 +18,15 @@ const ActivityScreen = ({ route, navigation }) => {
   const [transactions, setTransactions] = useState<any[]>([]); // list of transactions received from NewTransactionScreen
   const updatedTransactions = [...transactions, { "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description }];
   const [sortedTransactions, setSortedTransactions] = useState(new Map());
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // default only show current year 
+
   // const [completeEntries, setCompleteEntries] = useState<Set<any>>(new Set());
 
   useEffect(() => {
+    console.log("ActivityScreen");
+    console.log(date, description, dollarAmount, currency);
+    console.log("Selected year:", selectedYear);
+
     setTransactions(updatedTransactions);
 
     // sort transactions by date into a map
@@ -34,8 +41,20 @@ const ActivityScreen = ({ route, navigation }) => {
       setSortedTransactions(temp);
     }
 
-    console.log(sortedTransactions);
+    console.log("Sorted transactions: ", sortedTransactions);
   }, [dollarAmount]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("ActivityScreen focused");
+      // console.log("Sorted transactions: ", sortedTransactions);
+      return () => {
+        console.log("ActivityScreen unfocused");
+        // Clean up transactions since screen is unfocused
+        setTransactions([]);
+      };
+    }, [])
+  );
 
   const convertMonthNumToName = (monthNum: string) => {
     const formatter = new Intl.DateTimeFormat('en', { month: 'long' });
@@ -66,26 +85,29 @@ const ActivityScreen = ({ route, navigation }) => {
                 paddingLeft: 10,
               }}>{convertMonthNumToName(month)}</Text>
               {
-                sortedTransactions.get(month).map((transaction) => (
-                  <ActivityEntry
-                    date={transaction.date}
-                    dollarAmount={transaction.dollarAmount}
-                    description={transaction.description}
-                    currency={transaction.currency}
-                    key={transaction.description + " " + transaction.dollarAmount}
-                    editTransaction={() => { 
-                      console.log("editTransaction");
+                sortedTransactions.get(month).map((transaction) => {
+                  return transaction.date.split('/')[2] === selectedYear.toString() ?
+                    <ActivityEntry
+                      date={transaction.date}
+                      dollarAmount={transaction.dollarAmount}
+                      description={transaction.description}
+                      currency={transaction.currency}
+                      key={Math.random()}
+                      editTransaction={() => {
+                        console.log("editTransaction");
 
-                      // navigate to EditTransactionScreen
-                      navigation.navigate('EditTransaction', {
-                        "currency": transaction.currency,
-                        "date": transaction.date,
-                        "dollarAmount": transaction.dollarAmount,
-                        "description": transaction.description
-                      });
-                    }}
-                  />
-                ))
+                        // navigate to EditTransactionScreen
+                        navigation.navigate('EditTransaction', {
+                          "ogCurrency": transaction.currency,
+                          "ogDate": transaction.date,
+                          "ogDollarAmount": transaction.dollarAmount,
+                          "ogDescription": transaction.description
+                        });
+                      }}
+                    />
+                    :
+                    null;
+                })
               }
             </View>
           ))

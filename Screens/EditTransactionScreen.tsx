@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -14,18 +14,35 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import { formateDate } from '../Helpers';
+import Toast from 'react-native-root-toast';
 
-const EditTransactionScreen = ({ navigation }) => {
-  const [desc, setDesc] = useState('');
-  const [cost, setCost] = useState('');
-  const [date, setDate] = useState('');
-  const [selectedCurrency, setSelectedCurrency] = useState(' $ ');
+const EditTransactionScreen = ({ navigation, route }) => {
+  const { ogCurrency, ogDate, ogDollarAmount, ogDescription } = route.params;
+  // print out all the original values
+  const [cost, setCost] = useState(ogDollarAmount);
+  const [date, setDate] = useState(ogDate);
+  const [description, setDescription] = useState(ogDescription);
+  const [selectedCurrency, setSelectedCurrency] = useState(ogCurrency);
   const [open, setOpen] = useState(false);
+  const [day, setDay] = useState(0);
+  const [month, setMonth] = useState(0);
+  const [year, setYear] = useState(0);
+  // let day = 0, month = 0, year = 0;
 
   const onSelectCurrencySelect = (currencyType: string) => {
     setSelectedCurrency(currencyType);
     navigation.goBack();
   };
+
+  useEffect(() => {
+    console.log("EditTransactionScreen");
+    console.log(ogCurrency, ogDate, ogDollarAmount, ogDescription);
+    setMonth(parseInt(ogDate.split('/')[1]));
+    setDay(parseInt(ogDate.split('/')[0]));
+    setYear(parseInt(ogDate.split('/')[2]));
+
+    console.log(month, day, year);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -35,11 +52,19 @@ const EditTransactionScreen = ({ navigation }) => {
         </TouchableOpacity>
         <Text style={styles.displayTitle}>Edit Transaction</Text>
         <TouchableOpacity onPress={() => {
+          // ensure no fields are empty
+          if (description === '' || cost === '' || date === '') {
+            Toast.show('Please enter an expense target greater than $0.', {
+              duration: Toast.durations.LONG,
+            });
+            return;
+          }
+
           console.log({
             "currency": selectedCurrency,
             "date": date,
             "dollarAmount": cost,
-            "description": desc
+            "location": description
           })
 
           // TODO: Modify the existing transaction in the database
@@ -48,7 +73,7 @@ const EditTransactionScreen = ({ navigation }) => {
             "currency": selectedCurrency,
             "date": date,
             "dollarAmount": cost,
-            "description": desc
+            "description": description
           })
 
         }}>
@@ -63,16 +88,22 @@ const EditTransactionScreen = ({ navigation }) => {
           <TextInput
             style={[styles.inputDesc, styles.shadowProp]}
             id="descInput"
-            value={desc}
+            value={description}
             onChangeText={input => {
-              setDesc(input);
+              // if the input is empty, set it back to the original description
+              if (input == '') {
+                setDescription(ogDescription);
+                return;
+              }
+
+              setDescription(input);
             }}
-            placeholder="Description"
+            placeholder={ogDescription}
           />
         </View>
         <View style={styles.inputRow}>
           <TouchableOpacity style={styles.iconBorder} onPress={() => navigation.navigate('CurrencySelector', { selectCurrency: onSelectCurrencySelect })}>
-            <Text style={{ fontSize: 18, color: '#000' }}>{selectedCurrency}</Text>
+            <Text style={{ fontSize: 18, color: '#000' }}>{ogCurrency}</Text>
           </TouchableOpacity>
           <TextInput
             style={[styles.inputCost, styles.shadowProp]}
@@ -81,8 +112,18 @@ const EditTransactionScreen = ({ navigation }) => {
             onChangeText={input => {
               setCost(input);
             }}
-            placeholder="0.00"
+            placeholder={ogDollarAmount}
             keyboardType="numeric"
+            onEndEditing={() => {
+              // if the input is empty, set it back to the original cost
+              console.log("onEndEditing");
+              
+              // if the input is empty, set it back to the original cost
+              if (cost == '') {
+                setCost(ogDollarAmount);
+                return;
+              }
+            }}
           />
         </View>
         <View style={styles.inputRow}>
@@ -94,18 +135,26 @@ const EditTransactionScreen = ({ navigation }) => {
             id="dateInput"
             value={date}
             onChangeText={input => {
+              // if the input is empty, set it back to the original date
+              if (input == '') {
+                setDate(ogDate);
+                return;
+              }
+
               setDate(input);
             }}
-            placeholder="DD/MM/YY"
+            placeholder={ogDate}
             keyboardType="numeric"
             editable={false}
           />
         </View>
       </View>
+      {/* Convert ogDate (sting) to the Date object for DatePicker 
+      */}
       <DatePicker
         modal
         open={open}
-        date={new Date()}
+        date={new Date(year, month - 1, day)}
         mode="date"
         onConfirm={date => {
           setOpen(false);
