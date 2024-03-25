@@ -31,7 +31,6 @@ const NewTransactionScreen = ({ navigation }) => {
   const [date, setDate] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState(' $ ');
   const [open, setOpen] = useState(false);
-  const [pk, setPk] = useState('');
  
   const onSelectCurrencySelect = (currencyType: string) => {
     setSelectedCurrency(currencyType);
@@ -45,9 +44,8 @@ const NewTransactionScreen = ({ navigation }) => {
           <Feather color={'#000'} size={36} name="x" />
         </TouchableOpacity>
         <Text style={styles.displayTitle}>Add Transaction</Text>
-        <TouchableOpacity onPress={() => {
+        <TouchableOpacity onPress={async() => {
        
-        let pkk = 0;
           // todo: insert to table
           console.log([selectedCurrency,Number(date.substring(0,2)),Number(date.substring(4,5)),Number(date.substring(6,10)),cost,desc]);
           const insert = async() => {
@@ -56,12 +54,10 @@ const NewTransactionScreen = ({ navigation }) => {
             const res = await displayTables(db);
             //get last entered pk 
             const last = await db.executeSql(`SELECT last_insert_rowid();`);
-            setPk(last[0].rows.item(0)["last_insert_rowid()"])
-            pkk = last[0].rows.item(0).last_insert_rowid();
-          
+            return last[0].rows.item(0)["last_insert_rowid()"];
           }
-          insert();
-          console.log(`setted pk to  ${pkk}`)
+          const pk = await insert();
+          console.log(`setted pk to  ${pk}`)
 
              console.log({
             "currency": selectedCurrency,
@@ -117,6 +113,7 @@ const NewTransactionScreen = ({ navigation }) => {
           <TouchableOpacity style={styles.iconBorder} onPress={() => setOpen(true)}>
             <AntDesign color={'#000'} size={20} name="calendar" />
           </TouchableOpacity>
+          <TouchableOpacity style={{width:'100%'}} onPress={() => setOpen(true)}>
           <TextInput
             style={styles.inputDate}
             id="dateInput"
@@ -128,6 +125,7 @@ const NewTransactionScreen = ({ navigation }) => {
             keyboardType="numeric"
             editable={false}
           />
+          </TouchableOpacity>
         </View>
       </View>
       <DatePicker
