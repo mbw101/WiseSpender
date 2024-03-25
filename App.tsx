@@ -21,6 +21,7 @@ function App(): React.JSX.Element {
       const db = await getDBConnection();
       await createTables(db);
       console.log('Tables created');
+      //await db.executeSql(`delete from Transactions;`);
     } catch (error) {
       console.error(error)
     }

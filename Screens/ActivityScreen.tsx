@@ -9,23 +9,23 @@ const ActivityScreen = ({ route, navigation }) => {
 
   // destructure optional route params
   // if route.params is undefined, give empty values
-  const { currency, date, dollarAmount, description } = (route.params !== undefined ? route.params :
-    { "currency": "", "date": "", "dollarAmount": "", "description": "" });
+  const { currency, date, dollarAmount, description, pk } = (route.params !== undefined ? route.params :
+    { "currency": "", "date": "", "dollarAmount": "", "description": "", "pk": "", });
   // because we know that the format is day/month/year, we can split the string and grab the month
   // should be a way to convert month num to month name
 
 
   const [transactions, setTransactions] = useState<any[]>([]); // list of transactions received from NewTransactionScreen
-  const updatedTransactions = [...transactions, { "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description }];
+  const updatedTransactions = [...transactions, { "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description, "pk": pk}];
   const [sortedTransactions, setSortedTransactions] = useState(new Map());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // default only show current year 
 
   // const [completeEntries, setCompleteEntries] = useState<Set<any>>(new Set());
 
   useEffect(() => {
-    console.log("ActivityScreen");
-    console.log(date, description, dollarAmount, currency);
-    console.log("Selected year:", selectedYear);
+    // console.log("ActivityScreen");
+    // console.log(date, description, dollarAmount, currency);
+    // console.log("Selected year:", selectedYear);
 
     setTransactions(updatedTransactions);
 
@@ -101,7 +101,8 @@ const ActivityScreen = ({ route, navigation }) => {
                           "ogCurrency": transaction.currency,
                           "ogDate": transaction.date,
                           "ogDollarAmount": transaction.dollarAmount,
-                          "ogDescription": transaction.description
+                          "ogDescription": transaction.description,
+                          "ogPk": transaction.pk
                         });
                       }}
                     />

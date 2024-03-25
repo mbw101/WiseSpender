@@ -15,8 +15,8 @@ type ActivityEntryProps = {
 const ActivityEntry = (props: ActivityEntryProps) => {
     const { date, dollarAmount, description, currency, editTransaction } = props;
     // print the date, location, and amount spent
-    console.log("ActivityEntry");
-    console.log(date, description, dollarAmount, currency);
+    //console.log("ActivityEntry");
+    //console.log(date, description, dollarAmount, currency);
     
 
     return (

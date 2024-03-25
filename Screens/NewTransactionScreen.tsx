@@ -31,7 +31,8 @@ const NewTransactionScreen = ({ navigation }) => {
   const [date, setDate] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState(' $ ');
   const [open, setOpen] = useState(false);
-
+  const [pk, setPk] = useState('');
+ 
   const onSelectCurrencySelect = (currencyType: string) => {
     setSelectedCurrency(currencyType);
     navigation.goBack();
@@ -45,30 +46,38 @@ const NewTransactionScreen = ({ navigation }) => {
         </TouchableOpacity>
         <Text style={styles.displayTitle}>Add Transaction</Text>
         <TouchableOpacity onPress={() => {
-          console.log({
+       
+        let pkk = 0;
+          // todo: insert to table
+          console.log([selectedCurrency,Number(date.substring(0,2)),Number(date.substring(4,5)),Number(date.substring(6,10)),cost,desc]);
+          const insert = async() => {
+            const db = await getDBConnection();
+            await insertTransaction(db,[selectedCurrency,Number(date.substring(4,5)),Number(date.substring(0,2)),Number(date.substring(6,10)),cost,desc]);
+            const res = await displayTables(db);
+            //get last entered pk 
+            const last = await db.executeSql(`SELECT last_insert_rowid();`);
+            setPk(last[0].rows.item(0)["last_insert_rowid()"])
+            pkk = last[0].rows.item(0).last_insert_rowid();
+          
+          }
+          insert();
+          console.log(`setted pk to  ${pkk}`)
+
+             console.log({
             "currency": selectedCurrency,
             "date": date,
             "dollarAmount": cost,
-            "description": desc
+            "description": desc,
+            "pk": pk
           })
 
           navigation.navigate('Activity', {
             "currency": selectedCurrency,
             "date": date,
             "dollarAmount": cost,
-            "description": desc
+            "description": desc,
+            "pk": pk
           })
-
-          // todo: insert to table
-          console.log([selectedCurrency,Number(date.substring(0,2)),Number(date.substring(4,5)),Number(date.substring(6,10)),cost,desc]);
-          const insert = async() => {
-            const db = await getDBConnection();
-            await insertTransaction(db,[selectedCurrency,Number(date.substring(0,1)),Number(date.substring(3,4)),Number(date.substring(6,9)),cost,desc]);
-            const res =  await displayTables(db);
-            console.log(res);
-            
-          }
-          insert();
 
         }}>
           <Text style={styles.saveButton}>Save</Text>

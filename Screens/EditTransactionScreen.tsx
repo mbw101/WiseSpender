@@ -15,14 +15,16 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import { formateDate } from '../Helpers';
 import Toast from 'react-native-root-toast';
+import { displayTables, getDBConnection, updateTransaction} from './mySql.tsx';
 
 const EditTransactionScreen = ({ navigation, route }) => {
-  const { ogCurrency, ogDate, ogDollarAmount, ogDescription } = route.params;
+  const { ogCurrency, ogDate, ogDollarAmount, ogDescription, ogPk } = route.params;
   // print out all the original values
   const [cost, setCost] = useState(ogDollarAmount);
   const [date, setDate] = useState(ogDate);
   const [description, setDescription] = useState(ogDescription);
   const [selectedCurrency, setSelectedCurrency] = useState(ogCurrency);
+  const pk = ogPk;
   const [open, setOpen] = useState(false);
   const [day, setDay] = useState(0);
   const [month, setMonth] = useState(0);
@@ -36,7 +38,7 @@ const EditTransactionScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     console.log("EditTransactionScreen");
-    console.log(ogCurrency, ogDate, ogDollarAmount, ogDescription);
+    console.log(ogCurrency, ogDate, ogDollarAmount, ogDescription, ogPk);
     setMonth(parseInt(ogDate.split('/')[1]));
     setDay(parseInt(ogDate.split('/')[0]));
     setYear(parseInt(ogDate.split('/')[2]));
@@ -64,7 +66,8 @@ const EditTransactionScreen = ({ navigation, route }) => {
             "currency": selectedCurrency,
             "date": date,
             "dollarAmount": cost,
-            "location": description
+            "location": description,
+            "pk": pk
           })
 
           // TODO: Modify the existing transaction in the database
@@ -73,8 +76,17 @@ const EditTransactionScreen = ({ navigation, route }) => {
             "currency": selectedCurrency,
             "date": date,
             "dollarAmount": cost,
-            "description": description
+            "description": description,
+            "pk": pk
           })
+
+          
+          const update = async() => {
+            const db = await getDBConnection();
+            await updateTransaction(db,[selectedCurrency,Number(date.substring(4,5)),Number(date.substring(0,2)),Number(date.substring(6,10)),cost,description],pk);
+            const res = await displayTables(db);
+          }
+          update();
 
         }}>
           <Text style={styles.saveButton}>Save</Text>
