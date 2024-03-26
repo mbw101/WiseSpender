@@ -9,6 +9,7 @@ import WeeklyBreakdown from "../Components/WeeklyBreakdown";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { createTables, getDBConnection, displayTables } from "./mySql.tsx";
 import { FireFilled } from "@ant-design/icons";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,7 +25,7 @@ const HomeScreenComponent = ({ navigation }) => {
     const [dailyAverage, setDailyAverage] = useState(57.75);
     const [expenseTarget, setExpenseTarget] = useState(48.40);
     // props for the streaks
-    const [daysInARow, setDaysInARow] = useState(3); // TODO: Change defaults for milestone 3
+    const [daysInARow, setDaysInARow] = useState(3); // TODO: Load from DB
 
     return (
         <View style={styles.container}>
@@ -39,8 +40,7 @@ const HomeScreenComponent = ({ navigation }) => {
                     justifyContent: 'space-between',
                     width: 60,
                 }}>
-                    {/* TODO: Get Fire icon working */}
-                    {/* <FireFilled /> */}
+                    <FontAwesome5 name="fire" color="#ff0000" size={16} />
                     <Text>3 days</Text>
                 </View>
             </View>

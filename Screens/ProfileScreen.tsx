@@ -2,8 +2,11 @@ import * as React from "react";
 import { View, Text, StyleSheet, NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Dialog from "react-native-dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const LIGHT_THEME = "light";
+const DARK_THEME = "dark";
 
 type PreferenceSectionProps = {
   title: string;
@@ -24,6 +27,7 @@ const PreferenceSection = (props: PreferenceSectionProps) => {
 
 const ProfileScreen = () => {
   const [showExpenseDialog, setShowExpenseDialog] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState(LIGHT_THEME);
   const [expense, setExpense] = useState(0);
 
   const handleCancel = () => {
@@ -40,13 +44,30 @@ const ProfileScreen = () => {
     console.log(Number.parseFloat(input));
   }
 
+  useEffect(() => {
+    AsyncStorage.getItem('theme').then((value) => {
+      console.log("Value from async storage: ", value);
+
+      if (value !== null) {
+        setCurrentTheme(value);
+      }
+      else {
+        // set default to light
+        AsyncStorage.setItem('theme', LIGHT_THEME);
+      }
+
+      console.log("Current theme: ", currentTheme);
+    });
+
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.title}>
         <Text style={styles.profileScreenTitle}>Profile Screen</Text>
       </View>
 
-      <View>
+      {/* <View>
         <Text style={styles.preferenceTitle}>General</Text>
 
         <PreferenceSection title="Edit monthly expenses" onClick={() => {
@@ -56,15 +77,25 @@ const ProfileScreen = () => {
           console.log(expense);
         }
         } />
-      </View>
+      </View> */}
 
       <View>
         <Text style={styles.preferenceTitle}>Appearance</Text>
-        <PreferenceSection title="Change Theme" onClick={() => {
+        <PreferenceSection title={"Toggle Theme"} onClick={() => {
           {/* TODO: Flip the current theme to the opposite */ }
           console.log("Clicked");
-        }
-        } />
+
+          if (currentTheme === LIGHT_THEME) {
+            setCurrentTheme(DARK_THEME);
+            AsyncStorage.setItem('theme', DARK_THEME);
+          }
+          else {
+            setCurrentTheme(LIGHT_THEME);
+            AsyncStorage.setItem('theme', LIGHT_THEME);
+          }
+
+          console.log("New theme: ", currentTheme);
+        }} />
       </View>
 
       <View>

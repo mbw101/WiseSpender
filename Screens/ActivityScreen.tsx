@@ -31,8 +31,6 @@ const ActivityScreen = ({ route, navigation }) => {
       updatedTransactions.push({ "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description, "id": id });
     }
     else if (action === TransactionAction.Update) {
-      // console.log("Updating transaction", { "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description, "id": id});
-
       // update transaction if Update
       for (let i = 0; i < updatedTransactions.length; i++) {
         if (updatedTransactions[i].id === id) {
@@ -52,7 +50,6 @@ const ActivityScreen = ({ route, navigation }) => {
       });
     }
 
-    // console.log("Updated transactions = ", updatedTransactions);
     setTransactions(updatedTransactions);
 
     // sort transactions by date into a map
@@ -67,7 +64,6 @@ const ActivityScreen = ({ route, navigation }) => {
       setSortedTransactions(temp);
     }
 
-    // console.log("Sorted transactions: ", sortedTransactions);
   }, [id, action, currency, date, description, dollarAmount]);
 
   useFocusEffect(

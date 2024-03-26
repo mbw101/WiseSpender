@@ -81,6 +81,12 @@ const NewTransactionScreen = ({ navigation }) => {
             return;
           }
 
+          if (isNaN(cost)) {
+            Toast.show('Cost must be a number', {
+              duration: Toast.durations.LONG,
+            });
+            return;
+          }
 
           const id = uuid.v4();
 

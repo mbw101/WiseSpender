@@ -65,8 +65,6 @@ const EditTransactionScreen = ({ navigation, route }) => {
           width: 60,
         }}>
           <TouchableOpacity onPress={() => {
-            // TODO: Perform deletion from the database
-
             // TODO: Modify the existing transaction in the database
             navigation.navigate('Activity', {
               "currency": '',
@@ -89,6 +87,12 @@ const EditTransactionScreen = ({ navigation, route }) => {
             }
             if (cost === '') {
               setCost(ogDollarAmount);
+            }
+            if (isNaN(cost)) {
+              Toast.show('Cost must be a number', {
+                duration: Toast.durations.LONG,
+              });
+              return;
             }
             if (date === '') {
               setDate(ogDate);

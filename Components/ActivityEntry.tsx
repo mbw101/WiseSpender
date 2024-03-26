@@ -26,7 +26,7 @@ const ActivityEntry = (props: ActivityEntryProps) => {
                 width: '17%'
             }}>
                 <Text style={{
-                    fontSize: 12
+                    fontSize: 10
                 }}>{date}</Text>
             </View>
 
