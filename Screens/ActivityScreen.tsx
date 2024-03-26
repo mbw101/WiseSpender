@@ -25,6 +25,7 @@ const ActivityScreen = ({ route, navigation }) => {
   useEffect(() => {
     console.log("UseEffect in ActivityScreen");
     console.log(date, description, dollarAmount, currency, action, id);
+    sortedTransactions.clear();
 
     // add to updated transactions if Create
     if (action === TransactionAction.Create) {
@@ -65,15 +66,6 @@ const ActivityScreen = ({ route, navigation }) => {
     }
 
   }, [id, action, currency, date, description, dollarAmount]);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      return () => {
-        // Clean up transactions since screen is unfocused
-        sortedTransactions.clear();
-      };
-    }, [])
-  );
 
   const convertMonthNumToName = (monthNum: string) => {
     const formatter = new Intl.DateTimeFormat('en', { month: 'long' });
