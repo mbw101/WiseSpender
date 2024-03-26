@@ -3,30 +3,56 @@ import { View, Text, StyleSheet } from 'react-native';
 import ActivityEntry from "../Components/ActivityEntry";
 import { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import TransactionAction from "../Components/TransactionAction";
 
 const ActivityScreen = ({ route, navigation }) => {
 
   // destructure optional route params
   // if route.params is undefined, give empty values
-  const { currency, date, dollarAmount, description } = (route.params !== undefined ? route.params :
-    { "currency": "", "date": "", "dollarAmount": "", "description": "" });
+  const { currency, date, dollarAmount, description, action, id } = (route.params !== undefined ? route.params :
+    { "currency": "", "date": "", "dollarAmount": "", "description": "", action: TransactionAction.Create, id: "" });
   // because we know that the format is day/month/year, we can split the string and grab the month
   // should be a way to convert month num to month name
 
 
   const [transactions, setTransactions] = useState<any[]>([]); // list of transactions received from NewTransactionScreen
-  const updatedTransactions = [...transactions, { "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description }];
+  let updatedTransactions = [...transactions];
   const [sortedTransactions, setSortedTransactions] = useState(new Map());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // default only show current year 
-
-  // const [completeEntries, setCompleteEntries] = useState<Set<any>>(new Set());
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    console.log("ActivityScreen");
-    console.log(date, description, dollarAmount, currency);
-    console.log("Selected year:", selectedYear);
+    console.log("UseEffect in ActivityScreen");
+    console.log(date, description, dollarAmount, currency, action, id);
 
+    // add to updated transactions if Create
+    if (action === TransactionAction.Create) {
+      updatedTransactions.push({ "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description, "id": id });
+    }
+    else if (action === TransactionAction.Update) {
+      // console.log("Updating transaction", { "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description, "id": id});
+
+      // update transaction if Update
+      for (let i = 0; i < updatedTransactions.length; i++) {
+        if (updatedTransactions[i].id === id) {
+          console.log("Found transaction to update");
+          updatedTransactions[i].currency = currency;
+          updatedTransactions[i].date = date;
+          updatedTransactions[i].dollarAmount = dollarAmount;
+          updatedTransactions[i].description = description;
+          break;
+        }
+      }
+    }
+    else if (action === TransactionAction.Delete) {
+      console.log("Deleting transaction with id = ", id);
+      updatedTransactions = updatedTransactions.filter((transaction) => {
+        return transaction.id !== id;
+      });
+    }
+
+    // console.log("Updated transactions = ", updatedTransactions);
     setTransactions(updatedTransactions);
 
     // sort transactions by date into a map
@@ -41,17 +67,14 @@ const ActivityScreen = ({ route, navigation }) => {
       setSortedTransactions(temp);
     }
 
-    console.log("Sorted transactions: ", sortedTransactions);
-  }, [dollarAmount]);
+    // console.log("Sorted transactions: ", sortedTransactions);
+  }, [id, action, currency, date, description, dollarAmount]);
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log("ActivityScreen focused");
-      // console.log("Sorted transactions: ", sortedTransactions);
       return () => {
-        console.log("ActivityScreen unfocused");
         // Clean up transactions since screen is unfocused
-        setTransactions([]);
+        sortedTransactions.clear();
       };
     }, [])
   );
@@ -94,15 +117,16 @@ const ActivityScreen = ({ route, navigation }) => {
                       currency={transaction.currency}
                       key={Math.random()}
                       editTransaction={() => {
-                        console.log("editTransaction");
-                        console.log(transaction.currency, transaction.date, transaction.dollarAmount, transaction.description);
+                        console.log("transaction to edit:");
+                        console.log(transaction);
 
                         // navigate to EditTransactionScreen
                         navigation.navigate('EditTransaction', {
                           "ogCurrency": transaction.currency,
                           "ogDate": transaction.date,
                           "ogDollarAmount": transaction.dollarAmount,
-                          "ogDescription": transaction.description
+                          "ogDescription": transaction.description,
+                          "id": transaction.id
                         });
                       }}
                     />

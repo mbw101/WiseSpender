@@ -17,6 +17,8 @@ import { formateDate } from '../Helpers';
 
 import { createTables, displayTables,insertTransaction, getDBConnection } from './mySql.tsx';
 import Toast from 'react-native-root-toast';
+import TransactionAction from '../Components/TransactionAction.tsx';
+import uuid from 'react-native-uuid';
 
 
 //define navigation type
@@ -72,7 +74,6 @@ const NewTransactionScreen = ({ navigation }) => {
           }
 
           // see if cost is not a number
-
           if (Number(cost) <= 0) {
             Toast.show('Cost must be greater than $0', {
               duration: Toast.durations.LONG,
@@ -81,19 +82,27 @@ const NewTransactionScreen = ({ navigation }) => {
           }
 
 
+          const id = uuid.v4();
+
+          console.log("Adding transaction:");
           console.log({
             "currency": selectedCurrency,
             "date": date,
             "dollarAmount": cost,
-            "description": desc
-          })
+            "description": desc,
+            "action": TransactionAction.Create,
+            "id": id
+          });
 
+          // Create ID for new transaction
           navigation.navigate('Activity', {
             "currency": selectedCurrency,
             "date": date,
             "dollarAmount": cost,
-            "description": desc
-          })
+            "description": desc,
+            "action": TransactionAction.Create,
+            "id": id
+          });
 
           // todo: insert to table
           console.log([selectedCurrency,Number(date.substring(0,2)),Number(date.substring(4,5)),Number(date.substring(6,10)),cost,desc]);

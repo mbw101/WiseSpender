@@ -15,9 +15,10 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import { formateDate } from '../Helpers';
 import Toast from 'react-native-root-toast';
+import TransactionAction from '../Components/TransactionAction';
 
 const EditTransactionScreen = ({ navigation, route }) => {
-  const { ogCurrency, ogDate, ogDollarAmount, ogDescription } = route.params;
+  const { ogCurrency, ogDate, ogDollarAmount, ogDescription, id } = route.params;
   // print out all the original values
   const [cost, setCost] = useState(ogDollarAmount);
   const [date, setDate] = useState(ogDate);
@@ -35,7 +36,7 @@ const EditTransactionScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     console.log("EditTransactionScreen");
-    console.log(ogCurrency, ogDate, ogDollarAmount, ogDescription);
+    console.log(route.params);
     setMonth(parseInt(ogDate.split('/')[1]));
     setDay(parseInt(ogDate.split('/')[0]));
     setYear(parseInt(ogDate.split('/')[2]));
@@ -71,27 +72,35 @@ const EditTransactionScreen = ({ navigation, route }) => {
               "currency": '',
               "date": '',
               "dollarAmount": '',
-              "description": ''
+              "description": '',
+              "action": TransactionAction.Delete,
+              "id": id
             })
           }}>
             {/* <Text style={styles.saveButton}>Save</Text> */}
             <AntDesign color={'#000'} size={24} name="delete" />
           </TouchableOpacity>
 
+          {/* TODO: Save - Update existing transaction */}
           <TouchableOpacity onPress={() => {
             // ensure no fields are empty
-            if (description === '' || cost === '' || date === '') {
-              Toast.show('Please enter an expense target greater than $0.', {
-                duration: Toast.durations.LONG,
-              });
-              return;
+            if (description === '') {
+              setDescription(ogDescription);
+            }
+            if (cost === '') {
+              setCost(ogDollarAmount);
+            }
+            if (date === '') {
+              setDate(ogDate);
             }
 
             console.log({
               "currency": selectedCurrency,
               "date": date,
               "dollarAmount": cost,
-              "location": description
+              "location": description,
+              "action": TransactionAction.Update,
+              "id": id
             })
 
             // TODO: Modify the existing transaction in the database
@@ -100,7 +109,9 @@ const EditTransactionScreen = ({ navigation, route }) => {
               "currency": selectedCurrency,
               "date": date,
               "dollarAmount": cost,
-              "description": description
+              "description": description,
+              "action": TransactionAction.Update,
+              "id": id
             })
 
           }}>
@@ -122,12 +133,6 @@ const EditTransactionScreen = ({ navigation, route }) => {
             id="descInput"
             value={description}
             onChangeText={input => {
-              // if the input is empty, set it back to the original description
-              if (input == '') {
-                setDescription(ogDescription);
-                return;
-              }
-
               setDescription(input);
             }}
             placeholder={ogDescription.toString()}
@@ -151,10 +156,10 @@ const EditTransactionScreen = ({ navigation, route }) => {
               console.log("onEndEditing");
 
               // if the input is empty, set it back to the original cost
-              if (cost == '') {
-                setCost(ogDollarAmount);
-                return;
-              }
+              // if (cost == '') {
+              //   setCost(ogDollarAmount);
+              //   return;
+              // }
             }}
           />
         </View>
