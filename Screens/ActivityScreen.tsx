@@ -10,46 +10,22 @@ const ActivityScreen = ({ route, navigation }) => {
 
   // destructure optional route params
   // if route.params is undefined, give empty values
-  const { currency, date, dollarAmount, description, action, id } = (route.params !== undefined ? route.params :
-    { "currency": "", "date": "", "dollarAmount": "", "description": "", action: TransactionAction.Create, id: "" });
+  const { currency, date, dollarAmount, description, pk } = (route.params !== undefined ? route.params :
+    { "currency": "", "date": "", "dollarAmount": "", "description": "", "pk": "", });
   // because we know that the format is day/month/year, we can split the string and grab the month
   // should be a way to convert month num to month name
 
 
   const [transactions, setTransactions] = useState<any[]>([]); // list of transactions received from NewTransactionScreen
-  let updatedTransactions = [...transactions];
+  const updatedTransactions = [...transactions, { "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description, "pk": pk}];
   const [sortedTransactions, setSortedTransactions] = useState(new Map());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // default only show current year 
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    console.log("UseEffect in ActivityScreen");
-    console.log(date, description, dollarAmount, currency, action, id);
-    sortedTransactions.clear();
-
-    // add to updated transactions if Create
-    if (action === TransactionAction.Create) {
-      updatedTransactions.push({ "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description, "id": id });
-    }
-    else if (action === TransactionAction.Update) {
-      // update transaction if Update
-      for (let i = 0; i < updatedTransactions.length; i++) {
-        if (updatedTransactions[i].id === id) {
-          console.log("Found transaction to update");
-          updatedTransactions[i].currency = currency;
-          updatedTransactions[i].date = date;
-          updatedTransactions[i].dollarAmount = dollarAmount;
-          updatedTransactions[i].description = description;
-          break;
-        }
-      }
-    }
-    else if (action === TransactionAction.Delete) {
-      console.log("Deleting transaction with id = ", id);
-      updatedTransactions = updatedTransactions.filter((transaction) => {
-        return transaction.id !== id;
-      });
-    }
+    // console.log("ActivityScreen");
+    // console.log(date, description, dollarAmount, currency);
+    // console.log("Selected year:", selectedYear);
 
     setTransactions(updatedTransactions);
 
@@ -65,7 +41,7 @@ const ActivityScreen = ({ route, navigation }) => {
       setSortedTransactions(temp);
     }
 
-  }, [id, action, currency, date, description, dollarAmount]);
+  }, [currency, date, description, dollarAmount]);
 
   const convertMonthNumToName = (monthNum: string) => {
     const formatter = new Intl.DateTimeFormat('en', { month: 'long' });
@@ -114,7 +90,7 @@ const ActivityScreen = ({ route, navigation }) => {
                           "ogDate": transaction.date,
                           "ogDollarAmount": transaction.dollarAmount,
                           "ogDescription": transaction.description,
-                          "id": transaction.id
+                          "ogPk": transaction.pk
                         });
                       }}
                     />

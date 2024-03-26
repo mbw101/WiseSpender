@@ -15,19 +15,21 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import { formateDate } from '../Helpers';
 import Toast from 'react-native-root-toast';
-import TransactionAction from '../Components/TransactionAction';
+import { displayTables, getDBConnection, updateTransaction} from './mySql.tsx';
 
 const EditTransactionScreen = ({ navigation, route }) => {
-  const { ogCurrency, ogDate, ogDollarAmount, ogDescription, id } = route.params;
+  const { ogCurrency, ogDate, ogDollarAmount, ogDescription, ogPk } = route.params;
   // print out all the original values
   const [cost, setCost] = useState(ogDollarAmount);
   const [date, setDate] = useState(ogDate);
   const [description, setDescription] = useState(ogDescription);
   const [selectedCurrency, setSelectedCurrency] = useState(ogCurrency);
+  const pk = ogPk;
   const [open, setOpen] = useState(false);
   const [day, setDay] = useState(0);
   const [month, setMonth] = useState(0);
   const [year, setYear] = useState(0);
+  // let day = 0, month = 0, year = 0;
 
   const onSelectCurrencySelect = (currencyType: string) => {
     setSelectedCurrency(currencyType);
@@ -36,7 +38,7 @@ const EditTransactionScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     console.log("EditTransactionScreen");
-    console.log(route.params);
+    console.log(ogCurrency, ogDate, ogDollarAmount, ogDescription, ogPk);
     setMonth(parseInt(ogDate.split('/')[1]));
     setDay(parseInt(ogDate.split('/')[0]));
     setYear(parseInt(ogDate.split('/')[2]));
@@ -50,83 +52,57 @@ const EditTransactionScreen = ({ navigation, route }) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Feather color={'#000'} size={36} name="x" />
         </TouchableOpacity>
+        <Text style={styles.displayTitle}>Edit Transaction</Text>
+        <TouchableOpacity onPress={() => {
+          // ensure no fields are empty
+          if (description === '') {
+            setDescription(ogDescription);
+          }
+          if (cost === '') {
+            setCost(ogDollarAmount);
+          }
 
-        <View style={{
-          justifyContent: 'center',
-          alignItems: 'center',
+          if (isNaN(cost)) {
+            Toast.show('Cost must be a number', {
+              duration: Toast.durations.LONG,
+            });
+            return;
+          }
+          if (date === '') {
+            setDate(ogDate);
+          }
+
+
+          console.log({
+            "currency": selectedCurrency,
+            "date": date,
+            "dollarAmount": cost,
+            "location": description,
+            "pk": pk
+          })
+
+          // TODO: Modify the existing transaction in the database
+          // TODO: We'll have to make sure that the correct entry gets updated (Rather than creating a new entry in Activity Screen)
+          navigation.navigate('Activity', {
+            "currency": selectedCurrency,
+            "date": date,
+            "dollarAmount": cost,
+            "description": description,
+            "pk": pk
+          })
+
           
+          const update = async() => {
+            const db = await getDBConnection();
+            await updateTransaction(db,[selectedCurrency,Number(date.substring(4,5)),Number(date.substring(0,2)),Number(date.substring(6,10)),cost,description],pk);
+            const res = await displayTables(db);
+          }
+          update();
+
         }}>
-          <Text style={styles.displayTitle}>Edit Transaction</Text>
-        </View>
-
-        <View style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          width: 60,
-        }}>
-          <TouchableOpacity onPress={() => {
-            // TODO: Modify the existing transaction in the database
-            navigation.navigate('Activity', {
-              "currency": '',
-              "date": '',
-              "dollarAmount": '',
-              "description": '',
-              "action": TransactionAction.Delete,
-              "id": id
-            })
-          }}>
-            {/* <Text style={styles.saveButton}>Save</Text> */}
-            <AntDesign color={'#000'} size={24} name="delete" />
-          </TouchableOpacity>
-
-          {/* TODO: Save - Update existing transaction */}
-          <TouchableOpacity onPress={() => {
-            // ensure no fields are empty
-            if (description === '') {
-              setDescription(ogDescription);
-            }
-            if (cost === '') {
-              setCost(ogDollarAmount);
-            }
-            if (isNaN(cost)) {
-              Toast.show('Cost must be a number', {
-                duration: Toast.durations.LONG,
-              });
-              return;
-            }
-            if (date === '') {
-              setDate(ogDate);
-            }
-
-            console.log({
-              "currency": selectedCurrency,
-              "date": date,
-              "dollarAmount": cost,
-              "location": description,
-              "action": TransactionAction.Update,
-              "id": id
-            })
-
-            // TODO: Modify the existing transaction in the database
-            // TODO: We'll have to make sure that the correct entry gets updated (Rather than creating a new entry in Activity Screen)
-            navigation.navigate('Activity', {
-              "currency": selectedCurrency,
-              "date": date,
-              "dollarAmount": cost,
-              "description": description,
-              "action": TransactionAction.Update,
-              "id": id
-            })
-
-          }}>
-            {/* <Text style={styles.saveButton}>Save</Text> */}
-            <AntDesign color={'#000'} size={24} name="save" />
-          </TouchableOpacity>
-        </View>
-
+          <Text style={styles.saveButton}>Save</Text>
+        </TouchableOpacity>
       </View>
-
-
       <View style={styles.inputSec}>
         <View style={styles.inputRow}>
           <TouchableOpacity style={styles.iconBorder}>
@@ -137,9 +113,15 @@ const EditTransactionScreen = ({ navigation, route }) => {
             id="descInput"
             value={description}
             onChangeText={input => {
+              // if the input is empty, set it back to the original description
+              if (input == '') {
+                setDescription(ogDescription);
+                return;
+              }
+
               setDescription(input);
             }}
-            placeholder={ogDescription.toString()}
+            placeholder={ogDescription}
           />
         </View>
         <View style={styles.inputRow}>
@@ -158,12 +140,12 @@ const EditTransactionScreen = ({ navigation, route }) => {
             onEndEditing={() => {
               // if the input is empty, set it back to the original cost
               console.log("onEndEditing");
-
+              
               // if the input is empty, set it back to the original cost
-              // if (cost == '') {
-              //   setCost(ogDollarAmount);
-              //   return;
-              // }
+              if (cost == '') {
+                setCost(ogDollarAmount);
+                return;
+              }
             }}
           />
         </View>

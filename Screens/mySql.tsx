@@ -72,8 +72,6 @@ export const createTables = async (db: SQLiteDatabase) => {
     await db.executeSql(TotalPerDayTable);
     await db.executeSql(MonthlyGoalTable);
     await db.executeSql(StreakTable);
-    const res = await db.executeSql(`pragma table_info(Transactions);`);
-    console.log(res);
   } catch (error) {
     console.error(error);
     throw Error(`Failed to create tables`);
@@ -81,15 +79,20 @@ export const createTables = async (db: SQLiteDatabase) => {
 }
 
 export const displayTables = async (db: SQLiteDatabase) => {
-  const display = `SELECT * FROM Transactions;`
-  await db.executeSql(display,[],(tx, results) => {
-    const transactions = [];
-    for (let i = 0; i < results.rows.length; i++) {
-       console.log(results.rows.item(i));
+  const display = `SELECT * FROM Transactions;`;
+  try{
+    const  res = await db.executeSql(`SELECT * FROM Transactions;`);
+    let rows = res[0].rows;
+    for (let i = 0; i < rows.length; i++) {
+      console.log(rows.item(i));
     }
 
-},
-);
+  } catch (error) {
+    console.error(error);
+    throw Error("Failed to display Transaction!");
+  }
+  
+  
 }
 
 export const insertTransaction = async (db: SQLiteDatabase, params : any) => {
@@ -98,12 +101,49 @@ export const insertTransaction = async (db: SQLiteDatabase, params : any) => {
       VALUES (?,?,?,?,?,?);
   `
   try {
-    await db.transaction((tx) => {
-    tx.executeSql(insertRow,params);
+    console.log(`params = ${params}`);
+    await db.transaction(async(tx) => {
+      await tx.executeSql(insertRow,params);
+      console.log("added transaction to database!")
   })
   } catch (error) {
     console.error(error);
     throw Error("Failed to add Transaction!");
+  }
+
+}
+
+export const updateTransaction = async (db: SQLiteDatabase, params : any, pk : Number) => {
+  console.log(`pk ${pk}`)
+  const updateRow = `
+      UPDATE Transactions SET currency = ?, month = ?, day = ?, year = ?, amount = ?, description = ? WHERE transaction_id = ${pk}
+  `
+  try {
+    console.log(`params = ${params}`);
+    await db.transaction(async(tx) => {
+      await tx.executeSql(updateRow,params);
+      console.log("Updated transaction to database!")
+  })
+  } catch (error) {
+    console.error(error);
+    throw Error("Failed to updated Transaction!");
+  }
+
+}
+
+export const deleteTransaction = async (db: SQLiteDatabase, params : any, pk : Number) => {
+  const deleteRow = `
+      DELETE FROM Transactions WHERE transaction_id = ${pk}
+  `
+  try {
+    console.log(`params = ${params}`);
+    await db.transaction(async(tx) => {
+      await tx.executeSql(deleteRow);
+      console.log("Deleted transaction from database!")
+  })
+  } catch (error) {
+    console.error(error);
+    throw Error("Failed to Deleted Transaction!");
   }
 
 }
