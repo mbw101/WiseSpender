@@ -29,7 +29,6 @@ const EditTransactionScreen = ({ navigation, route }) => {
   const [day, setDay] = useState(0);
   const [month, setMonth] = useState(0);
   const [year, setYear] = useState(0);
-  // let day = 0, month = 0, year = 0;
 
   const onSelectCurrencySelect = (currencyType: string) => {
     setSelectedCurrency(currencyType);

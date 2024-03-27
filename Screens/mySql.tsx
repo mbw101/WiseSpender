@@ -190,3 +190,5 @@ export const insertMonthlyGoal = async (db: SQLiteDatabase, params : any) => {
     VALUES (?,?,?,?);
   `;
 }
+
+// TODO: Implement streak query

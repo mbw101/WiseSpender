@@ -32,7 +32,6 @@ const ActivityEntry = (props: ActivityEntryProps) => {
 
             <View style={{
                 width: '78%',
-                // flex: 1, 
                 flexDirection: 'row',
             }}>
                 <Text style={styles.messageStyle}>You spent </Text>

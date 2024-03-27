@@ -19,9 +19,6 @@ const ActivityScreen = ({ route, navigation }) => {
   const [sortedTransactions, setSortedTransactions] = useState(new Map());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // default only show current year 
 
-  useEffect(() => {
-  }, []);
-
   useFocusEffect(
     useCallback(() => {
       // console.log("ActivityScreen focused");

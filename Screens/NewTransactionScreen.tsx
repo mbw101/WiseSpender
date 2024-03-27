@@ -19,13 +19,6 @@ import { createTables, displayTables, insertTransaction, getDBConnection } from 
 import Toast from 'react-native-root-toast';
 import TransactionAction from '../Components/TransactionAction.tsx';
 
-//define navigation type
-// type MainScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Main'>;
-
-// interface Props {
-//   navigation: MainScreenNavigationProp;
-// }
-
 const NewTransactionScreen = ({ navigation }) => {
   const [desc, setDesc] = useState('');
   const [cost, setCost] = useState('');

@@ -24,7 +24,6 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
   const [monthlyExpenseTarget, setMonthlyExpenseTarget] = useState(0);
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
-  // let tfdate : any = '';
   const [tfdate, setTfdate] = useState('');
   const [show, setShow] = useState(false);
   const [value, setValue] = useState('January');

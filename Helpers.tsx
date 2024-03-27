@@ -1,4 +1,4 @@
-export function getCurrentDate(): string {
+export const getCurrentDate = (): string => {
     let date: Date = new Date();
     const month = date.toLocaleString('default', { month: 'short' });
     const day = date.getDate();
@@ -7,14 +7,14 @@ export function getCurrentDate(): string {
     return `${month} ${day}, ${year}`;
 }
 
-export function getUpdateString(): string {
+export const getUpdateString = (): string => {
     let time: Date = new Date();
 
     return `Updated today, ${time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`;
 }
 
 // Formats the date to be in the format 'DD/MM/YY' from CalendarPicker in New/EditTransactionScreen
-export function formateDate(rawDate: Date) {
+export const formateDate = (rawDate: Date): string => {
   let date = new Date(rawDate);
   let year = date.getFullYear();
   let month = date.getMonth() + 1;
@@ -30,7 +30,7 @@ export function formateDate(rawDate: Date) {
 // returns the string for the Weekly Breakdown indicating
 // whether there's an increase or decrease compared to last week
 // Will be implemented for Milestone 3
-export function getPercentageDifferenceString(): string {
+export const getPercentageDifferenceString = (): string => {
     // TODO: Get last weeks average (I think from DB instead of Redux)
 
     // TODO: Get this week's average
@@ -40,4 +40,17 @@ export function getPercentageDifferenceString(): string {
 
 
     return `${percentageDifference}% from last week`;
+}
+
+export const getMonthProgress = (): number => {
+    const currentDay = new Date().getDate();
+    // get the number of days in the current month
+    // since the month is 0-indexed, we add 1 to the month and set the day to 0
+    const daysInMonth = getNumDaysInMonth();
+    const progress = currentDay / daysInMonth;
+    return progress;
+}
+
+export const getNumDaysInMonth = (): number => {
+    return new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
 }
