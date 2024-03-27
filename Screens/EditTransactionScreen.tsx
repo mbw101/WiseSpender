@@ -98,6 +98,12 @@ const EditTransactionScreen = ({ navigation, route }) => {
               setDate(ogDate);
             }
 
+            const update = async () => {
+              const db = await getDBConnection();
+              await updateTransaction(db, [selectedCurrency, Number(date.substring(4, 5)), Number(date.substring(0, 2)), Number(date.substring(6, 10)), cost, description], pk);
+              await displayTables(db, "Transactions");
+            }
+            update();
 
             console.log({
               "currency": selectedCurrency,
@@ -114,14 +120,6 @@ const EditTransactionScreen = ({ navigation, route }) => {
               "description": description,
               "pk": pk
             })
-
-
-            const update = async () => {
-              const db = await getDBConnection();
-              await updateTransaction(db, [selectedCurrency, Number(date.substring(4, 5)), Number(date.substring(0, 2)), Number(date.substring(6, 10)), cost, description], pk);
-              const res = await displayTables(db, "Transactions");
-            }
-            update();
 
           }}>
             <AntDesign color={'#000'} size={24} name="save" />
