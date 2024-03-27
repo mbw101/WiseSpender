@@ -48,6 +48,22 @@ const HomeScreenComponent = ({ navigation }) => {
             <View style={{
                 marginTop: 15,
             }}>
+                <View style={{
+
+                }}>
+                    {/* TODO: Add back arrow */}
+
+                </View>
+
+                <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}>
+                    <Text style={styles.defaultTextStyle}>Total Spent Today: </Text>
+                    <Text style={styles.spentStyle}> ${spentToday.toFixed(2)}</Text>
+                </View>
+
                 <WeeklyBreakdown
                     dailyAverage={dailyAverage}
                     percentageDifference={-34}
@@ -66,32 +82,6 @@ const HomeScreenComponent = ({ navigation }) => {
                 <Text style={{
                     marginTop: 10,
                 }}>{getUpdateString()}</Text>
-
-                <View style={{
-                    marginTop: 150,
-                }}>
-                    <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}>
-                        <Text style={styles.defaultTextStyle}>Total Spent Today: </Text>
-                        <Text style={styles.spentStyle}> ${spentToday.toFixed(2)}</Text>
-                    </View>
-                    <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}>
-                        <Text style={styles.defaultTextStyle}>Target Expenses:</Text>
-                        <Text style={styles.spentStyle}> ${expenseTarget.toFixed(2)}</Text>
-                    </View>
-
-                    {/* TODO: Can say whether this day is green, yellow, or red? */}
-                    <Text>
-                        Monthly Goal: { }
-                    </Text>
-                </View>
             </View>
         </View >
     );

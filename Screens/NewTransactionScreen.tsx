@@ -70,13 +70,13 @@ const NewTransactionScreen = ({ navigation }) => {
             });
             return;
           }
-          
+
           // todo: insert to table
           console.log([selectedCurrency, Number(date.substring(0, 2)), Number(date.substring(4, 5)), Number(date.substring(6, 10)), cost, desc]);
           const insert = async () => {
             const db = await getDBConnection();
-            await insertTransaction(db,[selectedCurrency,Number(date.substring(4,5)),Number(date.substring(0,2)),Number(date.substring(6,10)),cost,desc]);
-            const res = await displayTables(db,'Transactions');
+            await insertTransaction(db, [selectedCurrency, Number(date.substring(4, 5)), Number(date.substring(0, 2)), Number(date.substring(6, 10)), cost, desc]);
+            const res = await displayTables(db, 'Transactions');
             //get last entered pk 
             const last = await db.executeSql(`SELECT last_insert_rowid();`);
             return last[0].rows.item(0)["last_insert_rowid()"];
@@ -104,7 +104,7 @@ const NewTransactionScreen = ({ navigation }) => {
           })
 
         }}>
-          <Text style={styles.saveButton}>Save</Text>
+          <AntDesign color={'#000'} size={24} name="save" />
         </TouchableOpacity>
       </View>
       <View style={styles.inputSec}>

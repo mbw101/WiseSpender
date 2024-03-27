@@ -24,7 +24,8 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
   const [monthlyExpenseTarget, setMonthlyExpenseTarget] = useState(0);
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
-  let tfdate : any = '';
+  // let tfdate : any = '';
+  const [tfdate, setTfdate] = useState('');
   const [show, setShow] = useState(false);
   const [value, setValue] = useState('January');
   const [items, setItems] = useState([
@@ -47,11 +48,16 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
   const onValueChange = useCallback(
     (event, newDate) => {
       const selectedDate = newDate || date;
+      console.log(date);
+      const month = selectedDate.getMonth() + 1;
+      const zmonth = month < 10 ? `0${month}` : month;
+      const year = selectedDate.getFullYear();
+      setTfdate(`${zmonth}/${year}`);
 
       showPicker(false);
       setDate(selectedDate);
     },
-    [date, showPicker],
+    [tfdate, date, showPicker],
   );
 
   return (
@@ -80,16 +86,6 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
           locale="US"
         />
       )}
-        <DropDownPicker
-          open={open}
-          value={value}
-          items={items}
-          setOpen={setOpen}
-          setValue={setValue}
-          setItems={setItems}
-        />
-
-        {/* TODO: Add Monthly expense target */}
         <Text>Monthly Expense Target</Text>
         {/* Commas seem to get removed when parsing, so I think we're good for that */}
         <TextInput
@@ -111,13 +107,6 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
 
         <TouchableOpacity
           onPress={() => {
-            // Ensure they don't add an empty goal
-            if (goalText === '') {
-                Toast.show('Please enter a goal.', {
-                    duration: Toast.durations.LONG,
-                });
-                return;
-            }
             if (monthlyExpenseTarget <= 0) {
                 Toast.show('Please enter an expense target greater than $0.', {
                     duration: Toast.durations.LONG,
