@@ -84,7 +84,7 @@ const EditTransactionScreen = ({ navigation, route }) => {
           const update = async() => {
             const db = await getDBConnection();
             await updateTransaction(db,[selectedCurrency,Number(date.substring(4,5)),Number(date.substring(0,2)),Number(date.substring(6,10)),cost,description],pk);
-            const res = await displayTables(db);
+            const res = await displayTables(db,'Transactions');
           }
           update();
 

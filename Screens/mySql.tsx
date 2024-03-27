@@ -47,13 +47,11 @@ export const createTables = async (db: SQLiteDatabase) => {
     `
   const MonthlyGoalTable = `
       CREATE TABLE IF NOT EXISTS MonthlyGoal (
-          goal_id INTEGER NOT NULL,
           month INTEGER NOT NULL,
-          day INTEGER NOT NULL,
           year INTEGER NOT NULL,
           goal FLOAT NOT NULL,
           targetPerDay FLOAT NOT NULL,
-          PRIMARY KEY(goal_id)
+          PRIMARY KEY(month,year)
       )
     `
   const StreakTable = `
@@ -78,10 +76,9 @@ export const createTables = async (db: SQLiteDatabase) => {
   }
 }
 
-export const displayTables = async (db: SQLiteDatabase) => {
-  const display = `SELECT * FROM Transactions;`;
+export const displayTables = async (db: SQLiteDatabase, table: String) => {
   try{
-    const  res = await db.executeSql(`SELECT * FROM Transactions;`);
+    const  res = await db.executeSql(`SELECT * FROM ${table};`);
     let rows = res[0].rows;
     for (let i = 0; i < rows.length; i++) {
       console.log(rows.item(i));
@@ -89,7 +86,7 @@ export const displayTables = async (db: SQLiteDatabase) => {
 
   } catch (error) {
     console.error(error);
-    throw Error("Failed to display Transaction!");
+    throw Error(`Failed to display ${table}!`);
   }
   
   
@@ -146,4 +143,11 @@ export const deleteTransaction = async (db: SQLiteDatabase, params : any, pk : N
     throw Error("Failed to Deleted Transaction!");
   }
 
+}
+
+export const insertMonthlyGoal = async (db: SQLiteDatabase, params : any) => {
+  const insertMonth = `
+    INSERT INTO MonthlyGoal (month,year,goal,targetPerDay)
+    VALUES (?,?,?,?);
+  `;
 }

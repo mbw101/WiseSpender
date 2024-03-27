@@ -9,6 +9,8 @@ import {
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Toast from 'react-native-root-toast';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { getCurrentDate } from '../Helpers';
+import {getDBConnection, insertMonthlyGoal } from './mySql';
 
 type AddGoalScreenComponentProps = {
   setAddedGoal: Dispatch<SetStateAction<boolean>>;
@@ -96,6 +98,14 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
                 return;
             }
             console.log(monthlyExpenseTarget);
+            
+            //todo: store to database
+            const insert = async() => {
+              const db = await getDBConnection();
+              console.log('curdate:' + getCurrentDate())
+              //await insertMonthlyGoal(db,[getCurrentDate(),goalText,monthlyExpenseTarget]);
+            }
+            insert();
 
             setAddedGoal(true);
             navigation.navigate('home');
