@@ -22,7 +22,8 @@ function App(): React.JSX.Element {
       const db = await getDBConnection();
       await createTables(db);
       console.log('Tables created');
-      // await db.executeSql(`delete from Transactions;`);
+      //clear rows from table
+      //await db.executeSql(`delete from MonthlyGoal;`);
     } catch (error) {
       console.error(error)
     }

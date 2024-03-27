@@ -39,51 +39,69 @@ const HomeScreenComponent = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <View style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-            }}>
-                <Text style={styles.dateStyle}>{getCurrentDate()}</Text>
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
+                    width: '100%',
+                    padding: 8,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#E4E4E6',
+                }}>
                 <View style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    width: 60,
+                    alignItems: 'center',
+                    
                 }}>
-                    <FontAwesome5 name="fire" color="#ff0000" size={16} />
-                    <Text>3 days</Text>
+                    <Text style={styles.dateStyle}>{getCurrentDate()}</Text>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        width: 60,
+                    }}>
+                        <FontAwesome5 name="fire" color="#ff0000" size={16} />
+                        <Text>3 days</Text>
+                    </View>
                 </View>
+                    <TouchableOpacity
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            paddingHorizontal: 2,
+                            width: '32%',
+                        }}
+                        onPress={() => navigation.navigate('AllGoals')}
+                    >
+                        <FontAwesome5 name="arrow-left" color="#000000" size={14} />
+                        <Text style={{marginLeft: 4, color: '#000'}}>View All Goals</Text>
+                    </TouchableOpacity>
             </View>
 
             <View style={{
                 marginTop: 15,
+                width: '100%',
+                paddingHorizontal: 12,
+              
             }}>
-                <TouchableOpacity
-                    style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                    }}
-                    onPress={() => navigation.navigate('addGoal')}
-                >
-                    <FontAwesome5 name="arrow-left" color="#000000" size={16} />
-                    <Text>View All Goals</Text>
-                </TouchableOpacity>
-
+               
                 <View style={{
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginBottom: 100
+                    marginBottom: 70,
+                  
                 }}>
                     <Text style={styles.defaultTextStyle}>Total Spent Today: </Text>
                     <Text style={styles.spentStyle}> ${spentToday.toFixed(2)}</Text>
                 </View>
-
+                {/* <View style={{padding:8}}> */}
                 <WeeklyBreakdown
                     dailyAverage={dailyAverage}
                     percentageDifference={-34}
                 />
                 <TouchableOpacity style={{
                     backgroundColor: "#E8E6E6",
+                    borderRadius: 5,
+                    paddingHorizontal: 2,
                     width: "50%",
                     flexDirection: 'row',
                     marginTop: 5,
@@ -97,14 +115,13 @@ const HomeScreenComponent = ({ navigation }) => {
                     marginTop: 10,
                 }}>{getUpdateString()}</Text>
             </View>
-
+            
 
             <View style={{
                 alignContent: 'center',
-                justifyContent: 'center',
                 alignItems: 'center',
-                flex: 1,
                 width: '100%',
+                marginTop: 30,
             }}>
                 <Progress.Bar progress={monthProgress} width={300} height={12}/>
                 <Text style={styles.defaultTextStyle}>Days completed: {(monthProgress * 100).toFixed(0)}%</Text>
@@ -124,7 +141,7 @@ const HomeScreen = (props: HomeScreenProps) => {
 
             <Stack.Screen name="home" component={HomeScreenComponent} options={{ headerShown: false }} />
             {addedGoal ? null :
-                <Stack.Screen name="addGoal" options={{ headerShown: false }}>
+                <Stack.Screen name="addGoal" options={{ headerShown: false}}>
                     {props => <AddGoalScreen navigation={props.navigation} setAddedGoal={setAddedGoal} />}
                 </Stack.Screen>
             }
@@ -136,9 +153,8 @@ const HomeScreen = (props: HomeScreenProps) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 10,
-        // justifyContent: 'center',
-        // alignItems: 'center',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
     },
     dateStyle: {
         color: "#0C9AEA",

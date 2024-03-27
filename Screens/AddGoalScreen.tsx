@@ -9,9 +9,9 @@ import {
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Toast from 'react-native-root-toast';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { getCurrentDate } from '../Helpers';
+import { getCurrentDate, formateDate } from '../Helpers';
 import MonthPicker from 'react-native-month-year-picker';
-import {getDBConnection, insertMonthlyGoal } from './mySql';
+import {displayTables, getDBConnection, insertMonthlyGoal } from './mySql';
 
 type AddGoalScreenComponentProps = {
   setAddedGoal: Dispatch<SetStateAction<boolean>>;
@@ -23,8 +23,7 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
   const [goalText, setGoalText] = useState('');
   const [monthlyExpenseTarget, setMonthlyExpenseTarget] = useState(0);
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState(new Date());
-  const [tfdate, setTfdate] = useState('');
+  const [date, setDate] = useState('');
   const [show, setShow] = useState(false);
   const [value, setValue] = useState('January');
   const [items, setItems] = useState([
@@ -47,64 +46,64 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
   const onValueChange = useCallback(
     (event, newDate) => {
       const selectedDate = newDate || date;
-      console.log(date);
       const month = selectedDate.getMonth() + 1;
       const zmonth = month < 10 ? `0${month}` : month;
       const year = selectedDate.getFullYear();
-      setTfdate(`${zmonth}/${year}`);
-
-      showPicker(false);
-      setDate(selectedDate);
+      showPicker(false); 
+      setDate(`${zmonth}/${year}`);
     },
-    [tfdate, date, showPicker],
+    [date, showPicker],
   );
+  console.log(date);
 
   return (
     <View style={styles.container}>
+      <View style={styles.top}>
+        <Text style={styles.title}>New Goal</Text>
+      </View>
       <View style={styles.addGoal}>
-        <Text>Add a new month</Text>
-        <TouchableOpacity style={{ width: '100%' }} onPress={() => showPicker(true)}>
-            <TextInput
-              style={styles.inputDate}
-              id="dateInput"
-              value={tfdate}
-              onChangeText={input => {
-                tfdate = date;
-              }}
-              placeholder="MM/YYYY"
-              keyboardType="numeric"
-              editable={false}
+        <View style={styles.inputElement}>
+          <Text style={styles.labels}>Add a new month and year</Text>
+          <TouchableOpacity style={{ width: '100%' }} onPress={() => showPicker(true)}>
+              <TextInput
+                style={styles.inputDate}
+                id="dateInput"
+                value={date}
+                placeholder={'MM/YYYY'}
+                keyboardType="numeric"
+                editable={false}
+              />
+            </TouchableOpacity>
+            {show && (
+            <MonthPicker
+              onChange={onValueChange}
+              value={new Date()}
+              minimumDate={new Date()}
+              maximumDate={new Date(2026, 12)}
+              locale="US"
             />
-          </TouchableOpacity>
-        {show && (
-        <MonthPicker
-          onChange={onValueChange}
-          value={date}
-          minimumDate={new Date()}
-          maximumDate={new Date(2025, 5)}
-          locale="US"
-        />
-      )}
-        <Text>Monthly Expense Target</Text>
-        {/* Commas seem to get removed when parsing, so I think we're good for that */}
-        <TextInput
-          style={styles.input}
-          id="expenseTargetInput"
-          value={monthlyExpenseTarget.toString()}
-          keyboardType="number-pad"
-          onChangeText={text => {
-            console.log(text);
-            let monthlyExpense = 0;
-            // only parse if text is not empty
-            if (text !== '') {
-              monthlyExpense = Number.parseInt(text);
-            }
-            setMonthlyExpenseTarget(monthlyExpense);
-          }}
-        />
-        {/* From that amount, we can calculate the daily amount (based on which month it currently is) */}
-
-        <TouchableOpacity
+            )}
+        </View>
+        <View style={styles.inputElement}>
+          <Text style={styles.labels}>Add a Monthly Expense Target</Text>
+          {/* Commas seem to get removed when parsing, so I think we're good for that */}
+          <TextInput
+            style={styles.inputDate}
+            id="expenseTargetInput"
+            value={monthlyExpenseTarget.toString()}
+            keyboardType="number-pad"
+            onChangeText={text => {
+              console.log(text);
+              let monthlyExpense = 0;
+              // only parse if text is not empty
+              if (text !== '') {
+                monthlyExpense = Number.parseInt(text);
+              }
+              setMonthlyExpenseTarget(monthlyExpense);
+            }}
+          />
+        </View>
+        <TouchableOpacity style={styles.arrow}
           onPress={() => {
             if (monthlyExpenseTarget <= 0) {
                 Toast.show('Please enter an expense target greater than $0.', {
@@ -112,20 +111,26 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
                 });
                 return;
             }
+            if (date == '') {
+              Toast.show('Please select a date.', {
+                  duration: Toast.durations.LONG,
+              });
+              return;
+          }
             console.log(monthlyExpenseTarget);
             
             //todo: store to database
             const insert = async() => {
               const db = await getDBConnection();
-              console.log('curdate:' + getCurrentDate())
-              //await insertMonthlyGoal(db,[getCurrentDate(),goalText,monthlyExpenseTarget]);
+              await insertMonthlyGoal(db,[parseInt(date.split('/')[0]),parseInt(date.split('/')[1]),1,monthlyExpenseTarget]);
+              await displayTables(db,"MonthlyGoal");
             }
             insert();
 
             setAddedGoal(true);
             navigation.navigate('home');
           }}>
-          <AntDesign color="black" size={48} name="arrowright" />
+          <AntDesign color="black" size={36} name="arrowright" />
         </TouchableOpacity>
       </View>
     </View>
@@ -134,43 +139,58 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    // alignItems: "center",
-    padding: 5,
     flex: 1,
-    flexGrow: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  top: {
+    marginTop: 10,
+    marginBottom: 30,
+    paddingBottom: 10,
+    alignItems: 'center',
+    width: '100%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E4E4E6',
+  },
+  title: {
+    color: '#000',
+    fontSize: 32,
+    fontWeight: '500',
+  
   },
   addGoal: {
     justifyContent: 'center', // center vertically
     alignItems: 'center', // center horizontally
+    flexDirection:'column',
     width: '100%',
-    flex: 1,
-    flexGrow: 1,
+    marginTop: 75,
     padding: 25,
   },
-  dateStyle: {
-    color: '#0C9AEA',
-    fontSize: 32,
+  inputElement : {
+    width:'100%',
+    marginVertical: 20,
   },
-  imageStyle: {
-    width: '20%',
-    margin: 20,
-    resizeMode: 'contain', // this looks better than stretch
-    backgroundColor: 'yellow',
-  },
-  input: {
-    borderWidth: 2,
-    padding: 10,
-    borderRadius: 10,
-    width: '80%',
+  labels: {
+    alignSelf: 'center',
+    fontSize: 16,
+    marginBottom: 10,
+    color: '#4468EC',
+    fontWeight: '500',
   },
   inputDate: {
-    borderWidth: 1,
+    borderWidth: 2,
     marginLeft: 30,
     padding: 10,
     borderRadius: 18,
     width: '85%',
     fontSize: 20,
     color: '#8B8E96',
+  },
+  arrow: {
+    marginTop: 10,
+    borderWidth: 2,
+    paddingHorizontal: 5,
+    borderRadius: 12,
   },
 });
 

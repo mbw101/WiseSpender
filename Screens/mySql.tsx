@@ -49,7 +49,7 @@ export const createTables = async (db: SQLiteDatabase) => {
       CREATE TABLE IF NOT EXISTS MonthlyGoal (
           month INTEGER NOT NULL,
           year INTEGER NOT NULL,
-          goal FLOAT NOT NULL,
+          status INTEGER NOT NULL,
           targetPerDay FLOAT NOT NULL,
           PRIMARY KEY(month,year)
       )
@@ -70,6 +70,8 @@ export const createTables = async (db: SQLiteDatabase) => {
     await db.executeSql(TotalPerDayTable);
     await db.executeSql(MonthlyGoalTable);
     await db.executeSql(StreakTable);
+    //Drop table
+    //await db.executeSql(`Drop table MonthlyGoal;`);
   } catch (error) {
     console.error(error);
     throw Error(`Failed to create tables`);
@@ -141,7 +143,7 @@ export const insertTransaction = async (db: SQLiteDatabase, params: any) => {
     console.log(`params = ${params}`);
     await db.transaction(async (tx) => {
       await tx.executeSql(insertRow, params);
-      console.log("added transaction to database!")
+      console.log("Added transaction to database!")
     })
   } catch (error) {
     console.error(error);
@@ -186,9 +188,18 @@ export const deleteTransaction = async (db: SQLiteDatabase, pk: Number) => {
 
 export const insertMonthlyGoal = async (db: SQLiteDatabase, params : any) => {
   const insertMonth = `
-    INSERT INTO MonthlyGoal (month,year,goal,targetPerDay)
+    INSERT INTO MonthlyGoal (month,year,status,targetPerDay)
     VALUES (?,?,?,?);
   `;
+  try {
+    await db.transaction(async (tx) => {
+      await tx.executeSql(insertMonth, params);
+      console.log("Added MonthlyGoals to database!!")
+    })
+  } catch (error) {
+    console.error(error);
+    throw Error("Failed to add MonthlyGoals!");
+  }
 }
 
 // TODO: Implement streak query
