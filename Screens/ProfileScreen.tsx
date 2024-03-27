@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, NativeSyntheticEvent, TextInputChangeEventData 
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Dialog from "react-native-dialog";
 import { useEffect, useState } from "react";
-//import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LIGHT_THEME = "light";
 const DARK_THEME = "dark";

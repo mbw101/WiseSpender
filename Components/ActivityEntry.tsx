@@ -32,9 +32,11 @@ const ActivityEntry = (props: ActivityEntryProps) => {
 
             <View style={{
                 width: '78%',
-                paddingLeft: 15
+                flexDirection: 'row',
             }}>
-                <Text style={styles.messageStyle}>You spent {currency.trim()}{dollarAmount} on {description}</Text>
+                <Text style={styles.messageStyle}>You spent </Text>
+                <Text style={styles.costStyle}>{currency.trim()}{dollarAmount}</Text>
+                <Text style={styles.messageStyle}> on {description}</Text>
             </View>
         </TouchableOpacity>
     )
@@ -53,7 +55,11 @@ const styles = StyleSheet.create({
     },
     messageStyle: {
         color: '#4F37E0',
-        fontSize: 20
+        fontSize: 20,
+    },
+    costStyle: {
+        color: '#33c416',
+        fontSize: 20,
     }
 });
 

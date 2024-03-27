@@ -101,14 +101,27 @@ export const getAllTransactions = async (db: SQLiteDatabase) => {
     let item;
     for (let i = 0; i < rows.length; i++) {
       item = rows.item(i);
+      const month = item.month;
+      const day = item.day;
+      const zmonth = month < 10 ? `0${month}` : month;
+      const zday = day < 10 ? `0${day}` : day;
+
       transactions.push({
         "currency": item.currency,
-        "date": item.day + '/' + item.month + '/' + item.year,
+        "date": zday + '/' + zmonth + '/' + item.year,
         "dollarAmount": item.amount,
         "description": item.description,
         "pk": item.transaction_id
       });
 
+      console.log({
+        "currency": item.currency,
+        "date": zday + '/' + zmonth + '/' + item.year,
+        "dollarAmount": item.amount,
+        "description": item.description,
+        "pk": item.transaction_id
+      });
+      
     }
 
     return transactions;
@@ -177,3 +190,5 @@ export const insertMonthlyGoal = async (db: SQLiteDatabase, params : any) => {
     VALUES (?,?,?,?);
   `;
 }
+
+// TODO: Implement streak query

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import ActivityEntry from "../Components/ActivityEntry";
 import { useCallback, useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { useIsFocused } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { displayTables, getAllTransactions, getDBConnection } from "./mySql";
 
 const ActivityScreen = ({ route, navigation }) => {
@@ -15,61 +15,49 @@ const ActivityScreen = ({ route, navigation }) => {
   // because we know that the format is day/month/year, we can split the string and grab the month
   // should be a way to convert month num to month name
 
-  const [loaded, setLoaded] = useState(false);
   const [transactions, setTransactions] = useState<any[]>([]); // list of transactions received from NewTransactionScreen
   const [sortedTransactions, setSortedTransactions] = useState(new Map());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // default only show current year 
 
-  const loadTransactions = useCallback(async () => {
-    const db = await getDBConnection();
-    const transactionRows = await getAllTransactions(db);
-    setTransactions(transactionRows);
+  useFocusEffect(
+    useCallback(() => {
+      // console.log("ActivityScreen focused");
+      const getTransactions = async () => {
+        console.log("Getting transactions...");
+        const db = await getDBConnection();
+        await displayTables(db, 'Transactions');
+        const transactionRows = await getAllTransactions(db);
 
-    // sort transactions by date into a map
-    let temp = new Map();
-    for (let i = 0; i < transactionRows.length; i++) {
-      const month = transactionRows[i].date.split('/')[1];
-      if (temp.has(month)) {
-        temp.get(month).push(transactionRows[i]);
-      } else {
-        temp.set(month, [transactionRows[i]]);
+        setSortedTransactions(new Map());
+        setTransactions(transactionRows);
+        // console.log("Transactions: ", transactionRows);
+
+        // sort transactions by date into a map
+        let temp = new Map();
+        for (let i = 0; i < transactionRows.length; i++) {
+          const month = transactionRows[i].date.split('/')[1];
+          if (temp.has(month)) {
+            temp.get(month).push(transactionRows[i]);
+          } else {
+            temp.set(month, [transactionRows[i]]);
+          }
+        }
+
+        setSortedTransactions(temp);
       }
-    }
+      getTransactions();
 
-    setSortedTransactions(temp);
-  }, []);
+      // console.log("Sorted transactions: ", sortedTransactions);
+      return () => {
+        // console.log("ActivityScreen unfocused");
+        // Clean up transactions since screen is unfocused
+        sortedTransactions.clear();
+      };
+    }, [])
+  );
 
-  useEffect(() => {
-    sortedTransactions.clear();
+  console.log("sortedTransactions: ", sortedTransactions);
 
-    loadTransactions();
-    // // get all transactions
-    // const getTransactions = async () => {
-    //   console.log("Getting transactions...");
-    //   const db = await getDBConnection();
-    //   const transactionRows = await getAllTransactions(db);
-
-    //   setTransactions(transactionRows);
-    //   console.log("Transactions: ", transactionRows);
-
-    //   // sort transactions by date into a map
-    //   let temp = new Map();
-    //   for (let i = 0; i < transactionRows.length; i++) {
-    //     const month = transactionRows[i].date.split('/')[1];
-    //     if (temp.has(month)) {
-    //       temp.get(month).push(transactionRows[i]);
-    //     } else {
-    //       temp.set(month, [transactionRows[i]]);
-    //     }
-    //   }
-
-    //   setSortedTransactions(temp);
-    //   setLoaded(true);
-    // }
-    // getTransactions();
-
-    // setTransactions(updatedTransactions);
-  }, [loadTransactions]);
 
   const convertMonthNumToName = (monthNum: string) => {
     const formatter = new Intl.DateTimeFormat('en', { month: 'long' });
