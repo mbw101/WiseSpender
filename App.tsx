@@ -10,6 +10,7 @@ import CurrencySelectorScreen from './Screens/CurrencySelectorScreen.tsx';
 import MonthlyActivityScreen from './Screens/MonthlyActivityScreen.tsx';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import EditTransactionScreen from './Screens/EditTransactionScreen.tsx';
+import AllGoalsScreen from './Screens/AllGoals.tsx';
 import { createTables, displayTables, getDBConnection } from './Screens/mySql.tsx';
 
 const StackNavigator = createStackNavigator();
@@ -41,6 +42,7 @@ function App(): React.JSX.Element {
           <StackNavigator.Screen name="NewTransaction" component={NewTransactionScreen} options={{ presentation: 'modal' }} />
           <StackNavigator.Screen name="CurrencySelector" component={CurrencySelectorScreen} options={{ presentation: 'modal' }} />
           <StackNavigator.Screen name="EditTransaction" component={EditTransactionScreen} options={{ presentation: 'modal' }} />
+          <StackNavigator.Screen name="AllGoals" component={AllGoalsScreen} options={{ presentation: 'modal' }} />
         </StackNavigator.Navigator>
       </NavigationContainer>
     </RootSiblingParent>

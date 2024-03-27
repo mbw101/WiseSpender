@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useState} from 'react';
+import React, {Dispatch, SetStateAction, useState, useCallback} from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,6 +10,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Toast from 'react-native-root-toast';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { getCurrentDate } from '../Helpers';
+import MonthPicker from 'react-native-month-year-picker';
 import {getDBConnection, insertMonthlyGoal } from './mySql';
 
 type AddGoalScreenComponentProps = {
@@ -22,6 +23,9 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
   const [goalText, setGoalText] = useState('');
   const [monthlyExpenseTarget, setMonthlyExpenseTarget] = useState(0);
   const [open, setOpen] = useState(false);
+  const [date, setDate] = useState(new Date());
+  let tfdate : any = '';
+  const [show, setShow] = useState(false);
   const [value, setValue] = useState('January');
   const [items, setItems] = useState([
     {label: 'January', value: 'January'},
@@ -38,10 +42,44 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
     {label: 'December', value: 'December'},
   ]);
 
+  const showPicker = useCallback((value) => setShow(value), []);
+
+  const onValueChange = useCallback(
+    (event, newDate) => {
+      const selectedDate = newDate || date;
+
+      showPicker(false);
+      setDate(selectedDate);
+    },
+    [date, showPicker],
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.addGoal}>
         <Text>Add a new month</Text>
+        <TouchableOpacity style={{ width: '100%' }} onPress={() => showPicker(true)}>
+            <TextInput
+              style={styles.inputDate}
+              id="dateInput"
+              value={tfdate}
+              onChangeText={input => {
+                tfdate = date;
+              }}
+              placeholder="MM/YYYY"
+              keyboardType="numeric"
+              editable={false}
+            />
+          </TouchableOpacity>
+        {show && (
+        <MonthPicker
+          onChange={onValueChange}
+          value={date}
+          minimumDate={new Date()}
+          maximumDate={new Date(2025, 5)}
+          locale="US"
+        />
+      )}
         <DropDownPicker
           open={open}
           value={value}
@@ -49,17 +87,6 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
           setOpen={setOpen}
           setValue={setValue}
           setItems={setItems}
-        />
-
-        <Text>New Goal</Text>
-        <TextInput
-          style={styles.input}
-          id="goalInput"
-          value={goalText}
-          onChangeText={text => {
-            console.log(text);
-            setGoalText(text);
-          }}
         />
 
         {/* TODO: Add Monthly expense target */}
@@ -147,6 +174,15 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     width: '80%',
+  },
+  inputDate: {
+    borderWidth: 1,
+    marginLeft: 30,
+    padding: 10,
+    borderRadius: 18,
+    width: '85%',
+    fontSize: 20,
+    color: '#8B8E96',
   },
 });
 
