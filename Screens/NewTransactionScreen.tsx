@@ -15,7 +15,10 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import { formateDate } from '../Helpers';
 
-import { createTables, displayTables,insertTransaction, getDBConnection } from './mySql.tsx';
+import { createTables, displayTables, insertTransaction, getDBConnection } from './mySql.tsx';
+import Toast from 'react-native-root-toast';
+import TransactionAction from '../Components/TransactionAction.tsx';
+import uuid from 'react-native-uuid';
 
 
 //define navigation type
@@ -28,10 +31,12 @@ import { createTables, displayTables,insertTransaction, getDBConnection } from '
 const NewTransactionScreen = ({ navigation }) => {
   const [desc, setDesc] = useState('');
   const [cost, setCost] = useState('');
+  // const [cost, setCost] = useState<number>(0.0);
   const [date, setDate] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState(' $ ');
   const [open, setOpen] = useState(false);
- 
+  const [shown, setShown] = useState(true);
+
   const onSelectCurrencySelect = (currencyType: string) => {
     setSelectedCurrency(currencyType);
     navigation.goBack();
@@ -44,13 +49,35 @@ const NewTransactionScreen = ({ navigation }) => {
           <Feather color={'#000'} size={36} name="x" />
         </TouchableOpacity>
         <Text style={styles.displayTitle}>Add Transaction</Text>
-        <TouchableOpacity onPress={async() => {
-       
+        <TouchableOpacity onPress={async () => {
+          // check for invalid inputs
+          if (desc === '' || date === '') {
+            Toast.show('All fields must be filed', {
+              duration: Toast.durations.LONG,
+            });
+            return;
+          }
+
+          // see if cost is not a number
+          if (Number(cost) <= 0) {
+            Toast.show('Cost must be greater than $0', {
+              duration: Toast.durations.LONG,
+            });
+            return;
+          }
+
+          if (isNaN(cost)) {
+            Toast.show('Cost must be a number', {
+              duration: Toast.durations.LONG,
+            });
+            return;
+          }
+          
           // todo: insert to table
-          console.log([selectedCurrency,Number(date.substring(0,2)),Number(date.substring(4,5)),Number(date.substring(6,10)),cost,desc]);
-          const insert = async() => {
+          console.log([selectedCurrency, Number(date.substring(0, 2)), Number(date.substring(4, 5)), Number(date.substring(6, 10)), cost, desc]);
+          const insert = async () => {
             const db = await getDBConnection();
-            await insertTransaction(db,[selectedCurrency,Number(date.substring(4,5)),Number(date.substring(0,2)),Number(date.substring(6,10)),cost,desc]);
+            await insertTransaction(db, [selectedCurrency, Number(date.substring(4, 5)), Number(date.substring(0, 2)), Number(date.substring(6, 10)), cost, desc]);
             const res = await displayTables(db);
             //get last entered pk 
             const last = await db.executeSql(`SELECT last_insert_rowid();`);
@@ -59,7 +86,7 @@ const NewTransactionScreen = ({ navigation }) => {
           const pk = await insert();
           console.log(`setted pk to  ${pk}`)
 
-             console.log({
+          console.log({
             "currency": selectedCurrency,
             "date": date,
             "dollarAmount": cost,
@@ -67,12 +94,15 @@ const NewTransactionScreen = ({ navigation }) => {
             "pk": pk
           })
 
+          // Create ID for new transaction
+          // NOTE: Can remove props
           navigation.navigate('Activity', {
             "currency": selectedCurrency,
             "date": date,
             "dollarAmount": cost,
             "description": desc,
-            "pk": pk
+            "pk": pk,
+            "shown": shown
           })
 
         }}>
@@ -101,11 +131,11 @@ const NewTransactionScreen = ({ navigation }) => {
           <TextInput
             style={[styles.inputCost, styles.shadowProp]}
             id="costInput"
-            value={cost}
+            value={cost.toString()}
+            placeholder="0.00"
             onChangeText={input => {
               setCost(input);
             }}
-            placeholder="0.00"
             keyboardType="numeric"
           />
         </View>
@@ -113,18 +143,18 @@ const NewTransactionScreen = ({ navigation }) => {
           <TouchableOpacity style={styles.iconBorder} onPress={() => setOpen(true)}>
             <AntDesign color={'#000'} size={20} name="calendar" />
           </TouchableOpacity>
-          <TouchableOpacity style={{width:'100%'}} onPress={() => setOpen(true)}>
-          <TextInput
-            style={styles.inputDate}
-            id="dateInput"
-            value={date}
-            onChangeText={input => {
-              setDate(input);
-            }}
-            placeholder="DD/MM/YY"
-            keyboardType="numeric"
-            editable={false}
-          />
+          <TouchableOpacity style={{ width: '100%' }} onPress={() => setOpen(true)}>
+            <TextInput
+              style={styles.inputDate}
+              id="dateInput"
+              value={date}
+              onChangeText={input => {
+                setDate(input);
+              }}
+              placeholder="DD/MM/YY"
+              keyboardType="numeric"
+              editable={false}
+            />
           </TouchableOpacity>
         </View>
       </View>

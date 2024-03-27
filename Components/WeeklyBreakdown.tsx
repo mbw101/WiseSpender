@@ -15,21 +15,27 @@ const WeeklyBreakdown = (props: WeeklyBreakdownProps) => {
     const { dailyAverage, percentageDifference } = props;
     const [hasData, setHasData] = React.useState(true);
 
+
+    // data will take the form as an array of objects, where each object has a value and a label
+    const [data, setData] = React.useState([]);
+
     // TODO: Load in this data as a prop for Milestone 3
-    const data = [
-        { value: 60, label: 'M' },
-        { value: 50, label: 'T' },
-        { value: 60, label: 'W' },
-        { value: 50, label: 'T' },
-        { value: 60, label: 'F' },
-        { value: 50, label: 'S' },
-        { value: 60, label: 'S' }
-    ]
+    // const data = [
+    //     { value: 60, label: 'M' },
+    //     { value: 50, label: 'T' },
+    //     { value: 60, label: 'W' },
+    //     { value: 50, label: 'T' },
+    //     { value: 60, label: 'F' },
+    //     { value: 50, label: 'S' },
+    //     { value: 60, label: 'S' }
+    // ]
 
     useEffect(() => {
         // TODO: Load weekly data from the database, otherwise show placeholder text
 
-        // if there is data, set hasData to true
+        if (data.length === 0) {
+            setHasData(false);
+        }
     }, []);
 
     return (

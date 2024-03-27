@@ -15,7 +15,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import { formateDate } from '../Helpers';
 import Toast from 'react-native-root-toast';
-import { displayTables, getDBConnection, updateTransaction} from './mySql.tsx';
+import { deleteTransaction, displayTables, getDBConnection, updateTransaction } from './mySql.tsx';
 
 const EditTransactionScreen = ({ navigation, route }) => {
   const { ogCurrency, ogDate, ogDollarAmount, ogDescription, ogPk } = route.params;
@@ -53,44 +53,80 @@ const EditTransactionScreen = ({ navigation, route }) => {
           <Feather color={'#000'} size={36} name="x" />
         </TouchableOpacity>
         <Text style={styles.displayTitle}>Edit Transaction</Text>
-        <TouchableOpacity onPress={() => {
-          // ensure no fields are empty
-          if (description === '' || cost === '' || date === '') {
-            Toast.show('Please enter an expense target greater than $0.', {
-              duration: Toast.durations.LONG,
-            });
-            return;
-          }
 
-          console.log({
-            "currency": selectedCurrency,
-            "date": date,
-            "dollarAmount": cost,
-            "location": description,
-            "pk": pk
-          })
-
-          // TODO: Modify the existing transaction in the database
-          // TODO: We'll have to make sure that the correct entry gets updated (Rather than creating a new entry in Activity Screen)
-          navigation.navigate('Activity', {
-            "currency": selectedCurrency,
-            "date": date,
-            "dollarAmount": cost,
-            "description": description,
-            "pk": pk
-          })
-
-          
-          const update = async() => {
-            const db = await getDBConnection();
-            await updateTransaction(db,[selectedCurrency,Number(date.substring(4,5)),Number(date.substring(0,2)),Number(date.substring(6,10)),cost,description],pk);
-            const res = await displayTables(db);
-          }
-          update();
-
+        <View style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          width: 60,
         }}>
-          <Text style={styles.saveButton}>Save</Text>
-        </TouchableOpacity>
+
+          <TouchableOpacity onPress={async () => {
+            const performDelete = async () => {
+              const db = await getDBConnection();
+              await deleteTransaction(db, pk);
+              const res = await displayTables(db);
+            }
+            performDelete();
+
+            navigation.navigate('Activity', {
+              "currency": '',
+              "date": '',
+              "dollarAmount": '',
+              "description": '',
+              "pk": pk
+            })
+          }}>
+            <AntDesign color={'#000'} size={24} name="delete" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => {
+            // ensure no fields are empty
+            if (description === '') {
+              setDescription(ogDescription);
+            }
+            if (cost === '') {
+              setCost(ogDollarAmount);
+            }
+
+            if (isNaN(cost)) {
+              Toast.show('Cost must be a number', {
+                duration: Toast.durations.LONG,
+              });
+              return;
+            }
+            if (date === '') {
+              setDate(ogDate);
+            }
+
+
+            console.log({
+              "currency": selectedCurrency,
+              "date": date,
+              "dollarAmount": cost,
+              "location": description,
+              "pk": pk
+            })
+
+            navigation.navigate('Activity', {
+              "currency": selectedCurrency,
+              "date": date,
+              "dollarAmount": cost,
+              "description": description,
+              "pk": pk
+            })
+
+
+            const update = async () => {
+              const db = await getDBConnection();
+              await updateTransaction(db, [selectedCurrency, Number(date.substring(4, 5)), Number(date.substring(0, 2)), Number(date.substring(6, 10)), cost, description], pk);
+              const res = await displayTables(db);
+            }
+            update();
+
+          }}>
+            <AntDesign color={'#000'} size={24} name="save" />
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.inputSec}>
         <View style={styles.inputRow}>
@@ -120,7 +156,7 @@ const EditTransactionScreen = ({ navigation, route }) => {
           <TextInput
             style={[styles.inputCost, styles.shadowProp]}
             id="costInput"
-            value={cost}
+            value={cost.toString()}
             onChangeText={input => {
               setCost(input);
             }}
@@ -129,7 +165,7 @@ const EditTransactionScreen = ({ navigation, route }) => {
             onEndEditing={() => {
               // if the input is empty, set it back to the original cost
               console.log("onEndEditing");
-              
+
               // if the input is empty, set it back to the original cost
               if (cost == '') {
                 setCost(ogDollarAmount);

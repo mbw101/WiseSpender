@@ -1,9 +1,10 @@
 import * as React from "react";
 import { View, Text, StyleSheet } from 'react-native';
 import ActivityEntry from "../Components/ActivityEntry";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { useFocusEffect } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
+import { displayTables, getAllTransactions, getDBConnection } from "./mySql";
 
 const ActivityScreen = ({ route, navigation }) => {
 
@@ -14,47 +15,61 @@ const ActivityScreen = ({ route, navigation }) => {
   // because we know that the format is day/month/year, we can split the string and grab the month
   // should be a way to convert month num to month name
 
-
+  const [loaded, setLoaded] = useState(false);
   const [transactions, setTransactions] = useState<any[]>([]); // list of transactions received from NewTransactionScreen
-  const updatedTransactions = [...transactions, { "currency": currency, "date": date, "dollarAmount": dollarAmount, "description": description, "pk": pk}];
   const [sortedTransactions, setSortedTransactions] = useState(new Map());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // default only show current year 
 
-  // const [completeEntries, setCompleteEntries] = useState<Set<any>>(new Set());
-
-  useEffect(() => {
-    // console.log("ActivityScreen");
-    // console.log(date, description, dollarAmount, currency);
-    // console.log("Selected year:", selectedYear);
-
-    setTransactions(updatedTransactions);
+  const loadTransactions = useCallback(async () => {
+    const db = await getDBConnection();
+    const transactionRows = await getAllTransactions(db);
+    setTransactions(transactionRows);
 
     // sort transactions by date into a map
-    for (let i = 0; i < updatedTransactions.length; i++) {
-      const month = updatedTransactions[i].date.split('/')[1];
-      let temp = sortedTransactions;
-      if (sortedTransactions.has(month)) {
-        temp.get(month).push(updatedTransactions[i]);
+    let temp = new Map();
+    for (let i = 0; i < transactionRows.length; i++) {
+      const month = transactionRows[i].date.split('/')[1];
+      if (temp.has(month)) {
+        temp.get(month).push(transactionRows[i]);
       } else {
-        temp.set(month, [updatedTransactions[i]]);
+        temp.set(month, [transactionRows[i]]);
       }
-      setSortedTransactions(temp);
     }
 
-    console.log("Sorted transactions: ", sortedTransactions);
-  }, [dollarAmount]);
+    setSortedTransactions(temp);
+  }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      console.log("ActivityScreen focused");
-      // console.log("Sorted transactions: ", sortedTransactions);
-      return () => {
-        console.log("ActivityScreen unfocused");
-        // Clean up transactions since screen is unfocused
-        setTransactions([]);
-      };
-    }, [])
-  );
+  useEffect(() => {
+    sortedTransactions.clear();
+
+    loadTransactions();
+    // // get all transactions
+    // const getTransactions = async () => {
+    //   console.log("Getting transactions...");
+    //   const db = await getDBConnection();
+    //   const transactionRows = await getAllTransactions(db);
+
+    //   setTransactions(transactionRows);
+    //   console.log("Transactions: ", transactionRows);
+
+    //   // sort transactions by date into a map
+    //   let temp = new Map();
+    //   for (let i = 0; i < transactionRows.length; i++) {
+    //     const month = transactionRows[i].date.split('/')[1];
+    //     if (temp.has(month)) {
+    //       temp.get(month).push(transactionRows[i]);
+    //     } else {
+    //       temp.set(month, [transactionRows[i]]);
+    //     }
+    //   }
+
+    //   setSortedTransactions(temp);
+    //   setLoaded(true);
+    // }
+    // getTransactions();
+
+    // setTransactions(updatedTransactions);
+  }, [loadTransactions]);
 
   const convertMonthNumToName = (monthNum: string) => {
     const formatter = new Intl.DateTimeFormat('en', { month: 'long' });
@@ -94,13 +109,14 @@ const ActivityScreen = ({ route, navigation }) => {
                       currency={transaction.currency}
                       key={Math.random()}
                       editTransaction={() => {
-                        console.log("editTransaction");
+                        console.log("transaction to edit:");
+                        console.log(transaction);
 
                         // navigate to EditTransactionScreen
                         navigation.navigate('EditTransaction', {
                           "ogCurrency": transaction.currency,
                           "ogDate": transaction.date,
-                          "ogDollarAmount": transaction.dollarAmount,
+                          "ogDollarAmount": transaction.dollarAmount.toString(),
                           "ogDescription": transaction.description,
                           "ogPk": transaction.pk
                         });
