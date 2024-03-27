@@ -35,6 +35,7 @@ const NewTransactionScreen = ({ navigation }) => {
   const [date, setDate] = useState('');
   const [selectedCurrency, setSelectedCurrency] = useState(' $ ');
   const [open, setOpen] = useState(false);
+  const [shown, setShown] = useState(true);
 
   const onSelectCurrencySelect = (currencyType: string) => {
     setSelectedCurrency(currencyType);
@@ -94,12 +95,14 @@ const NewTransactionScreen = ({ navigation }) => {
           })
 
           // Create ID for new transaction
+          // NOTE: Can remove props
           navigation.navigate('Activity', {
             "currency": selectedCurrency,
             "date": date,
             "dollarAmount": cost,
             "description": desc,
-            "pk": pk
+            "pk": pk,
+            "shown": shown
           })
 
         }}>

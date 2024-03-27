@@ -15,7 +15,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import { formateDate } from '../Helpers';
 import Toast from 'react-native-root-toast';
-import { displayTables, getDBConnection, updateTransaction } from './mySql.tsx';
+import { deleteTransaction, displayTables, getDBConnection, updateTransaction } from './mySql.tsx';
 
 const EditTransactionScreen = ({ navigation, route }) => {
   const { ogCurrency, ogDate, ogDollarAmount, ogDescription, ogPk } = route.params;
@@ -60,8 +60,14 @@ const EditTransactionScreen = ({ navigation, route }) => {
           width: 60,
         }}>
 
-          <TouchableOpacity onPress={() => {
-            // TODO: Modify the existing transaction in the database
+          <TouchableOpacity onPress={async () => {
+            const performDelete = async () => {
+              const db = await getDBConnection();
+              await deleteTransaction(db, pk);
+              const res = await displayTables(db);
+            }
+            performDelete();
+
             navigation.navigate('Activity', {
               "currency": '',
               "date": '',
@@ -70,7 +76,6 @@ const EditTransactionScreen = ({ navigation, route }) => {
               "pk": pk
             })
           }}>
-            {/* <Text style={styles.saveButton}>Save</Text> */}
             <AntDesign color={'#000'} size={24} name="delete" />
           </TouchableOpacity>
 
@@ -102,8 +107,6 @@ const EditTransactionScreen = ({ navigation, route }) => {
               "pk": pk
             })
 
-            // TODO: Modify the existing transaction in the database
-            // TODO: We'll have to make sure that the correct entry gets updated (Rather than creating a new entry in Activity Screen)
             navigation.navigate('Activity', {
               "currency": selectedCurrency,
               "date": date,
@@ -153,7 +156,7 @@ const EditTransactionScreen = ({ navigation, route }) => {
           <TextInput
             style={[styles.inputCost, styles.shadowProp]}
             id="costInput"
-            value={cost}
+            value={cost.toString()}
             onChangeText={input => {
               setCost(input);
             }}
