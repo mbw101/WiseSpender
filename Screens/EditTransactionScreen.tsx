@@ -56,27 +56,7 @@ const EditTransactionScreen = ({ navigation, route }) => {
         <View style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
-          width: 60,
         }}>
-
-          <TouchableOpacity onPress={async () => {
-            const performDelete = async () => {
-              const db = await getDBConnection();
-              await deleteTransaction(db, pk);
-              const res = await displayTables(db,"Transactions");
-            }
-            performDelete();
-
-            navigation.navigate('Activity', {
-              "currency": '',
-              "date": '',
-              "dollarAmount": '',
-              "description": '',
-              "pk": pk
-            })
-          }}>
-            <AntDesign color={'#000'} size={24} name="delete" />
-          </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
             // ensure no fields are empty
@@ -193,6 +173,24 @@ const EditTransactionScreen = ({ navigation, route }) => {
             editable={false}
           />
         </View>
+        <TouchableOpacity style={styles.deleteButton} onPress={async () => {
+            const performDelete = async () => {
+              const db = await getDBConnection();
+              await deleteTransaction(db, pk);
+              const res = await displayTables(db,"Transactions");
+            }
+            performDelete();
+
+            navigation.navigate('Activity', {
+              "currency": '',
+              "date": '',
+              "dollarAmount": '',
+              "description": '',
+              "pk": pk
+            })
+          }}>
+            <AntDesign color={'#000'} size={24} name="delete" />
+          </TouchableOpacity>
       </View>
       {/* Convert ogDate (sting) to the Date object for DatePicker 
       */}
@@ -291,6 +289,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#8B8E96',
   },
+  deleteButton: {
+    alignSelf: 'center',
+    marginTop: 12,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+  }
 });
 
 export default EditTransactionScreen;

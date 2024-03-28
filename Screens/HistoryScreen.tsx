@@ -20,7 +20,7 @@ const HistoryScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.renderView}>
-          <Text style={{fontSize:14, color:'#000', alignSelf: 'center'}}>Past Goals</Text>
+          <Text style={{fontSize:14, color:'#000', alignSelf: 'center'}}>Completed Goals</Text>
           {test.map((item,index) => (
             <TouchableOpacity key={index} style={styles.itemBox} onPress={() => navigation.navigate('Home')}>
               <Text style={styles.itemMonth}>{item.month}</Text>

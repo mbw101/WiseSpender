@@ -50,7 +50,7 @@ export const createTables = async (db: SQLiteDatabase) => {
           month INTEGER NOT NULL,
           year INTEGER NOT NULL,
           status INTEGER NOT NULL,
-          targetPerDay FLOAT NOT NULL,
+          targetExpense FLOAT NOT NULL,
           PRIMARY KEY(month,year)
       )
     `
@@ -188,7 +188,7 @@ export const deleteTransaction = async (db: SQLiteDatabase, pk: Number) => {
 
 export const insertMonthlyGoal = async (db: SQLiteDatabase, params : any) => {
   const insertMonth = `
-    INSERT INTO MonthlyGoal (month,year,status,targetPerDay)
+    INSERT INTO MonthlyGoal (month,year,status,targetExpense)
     VALUES (?,?,?,?);
   `;
   try {
@@ -202,4 +202,54 @@ export const insertMonthlyGoal = async (db: SQLiteDatabase, params : any) => {
   }
 }
 
+export const deleteMonthlyGoals = async (db: SQLiteDatabase, month: Number, year: Number) => {
+  const deleteRow = `
+      DELETE FROM MonthlyGoal WHERE transaction_id = ${month}${year}
+  `
+  try {
+    await db.transaction(async (tx) => {
+      await tx.executeSql(deleteRow);
+      console.log("Deleted MonthlyGoal from database!")
+    })
+  } catch (error) {
+    console.error(error);
+    throw Error("Failed to Deleted MonthlyGoal!");
+  }
+
+}
+
+export const getAllMonthlyGoal = async (db: SQLiteDatabase) => {
+  try {
+    const res = await db.executeSql(`SELECT * FROM MonthlyGoal;`);
+    let rows = res[0].rows;
+
+    let goals = [];
+    let item;
+    for (let i = 0; i < rows.length; i++) {
+      item = rows.item(i);
+      const month = item.month;
+      const day = item.day;
+     
+
+      goals.push({
+        "month": item.month,
+        "year": item.year,
+        "targetExpense": item.targetExpense,
+        "status": item.status,
+      });
+
+      console.log("listele="+
+        "targetExpense"+ item.targetExpense +
+        "status"+ item.status 
+      );
+      
+    }
+
+    return goals;
+
+  } catch (error) {
+    console.error(error);
+    throw Error("Failed to display Transaction!");
+  }
+}
 // TODO: Implement streak query

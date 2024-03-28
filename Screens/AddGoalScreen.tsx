@@ -104,7 +104,7 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
           />
         </View>
         <TouchableOpacity style={styles.arrow}
-          onPress={() => {
+          onPress={async() => {
             if (monthlyExpenseTarget <= 0) {
                 Toast.show('Please enter an expense target greater than $0.', {
                     duration: Toast.durations.LONG,
@@ -116,7 +116,20 @@ const AddGoalScreen = (props: AddGoalScreenComponentProps) => {
                   duration: Toast.durations.LONG,
               });
               return;
-          }
+            }
+            const existsKey = async() => {
+              let flag = false;
+              const db = await getDBConnection();
+              let flag1 = await db.executeSql(`SELECT EXISTS(SELECT 1 FROM MonthlyGoal WHERE month = ${parseInt(date.split('/')[0])} AND year = ${parseInt(date.split('/')[1])});`);
+              let rows = flag1[0].rows;
+              console.log('flags:'+rows.item)
+              return flag;
+            }
+            if (await existsKey() === true) {
+              Toast.show('Goal Entry already exists. Please select another goal.', {
+                duration: Toast.durations.LONG,
+            });
+            }
             console.log(monthlyExpenseTarget);
             
             //todo: store to database

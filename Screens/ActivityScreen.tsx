@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { displayTables, getAllTransactions, getDBConnection } from "./mySql";
+import {convertMonthNumToName} from "../Helpers.tsx";
 
 const ActivityScreen = ({ route, navigation }) => {
 
@@ -49,8 +50,6 @@ const ActivityScreen = ({ route, navigation }) => {
 
       // console.log("Sorted transactions: ", sortedTransactions);
       return () => {
-        // console.log("ActivityScreen unfocused");
-        // Clean up transactions since screen is unfocused
         sortedTransactions.clear();
       };
     }, [])
@@ -58,11 +57,6 @@ const ActivityScreen = ({ route, navigation }) => {
 
   console.log("sortedTransactions: ", sortedTransactions);
 
-
-  const convertMonthNumToName = (monthNum: string) => {
-    const formatter = new Intl.DateTimeFormat('en', { month: 'long' });
-    return formatter.format(new Date(2024, parseInt(monthNum) - 1, 1));
-  }
 
   return (
     <View style={styles.container}>

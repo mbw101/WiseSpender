@@ -6,7 +6,6 @@ import AddGoalScreen from "./AddGoalScreen";
 import InitialScreen from "./InitialScreen";
 import { getCurrentDate, getMonthProgress, getNumDaysInMonth, getUpdateString } from "../Helpers";
 import WeeklyBreakdown from "../Components/WeeklyBreakdown";
-import AntDesign from "react-native-vector-icons/AntDesign";
 import { createTables, getDBConnection, displayTables } from "./mySql.tsx";
 import { FireFilled } from "@ant-design/icons";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
@@ -103,11 +102,12 @@ const HomeScreenComponent = ({ navigation }) => {
                     borderRadius: 5,
                     paddingHorizontal: 2,
                     width: "50%",
+                    alignItems:'center',
                     flexDirection: 'row',
                     marginTop: 5,
                 }} onPress={() => navigation.navigate('MonthlyActivity')}>
-                    <Text>See your monthly activity</Text>
-                    <AntDesign color="black" size={18} name="arrowright" />
+                    <Text style={{color:'#000',marginHorizontal: 5}}>See your monthly activity</Text>
+                    <FontAwesome5 name="arrow-right" color="#000000" size={16} />
 
                 </TouchableOpacity>
 

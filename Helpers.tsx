@@ -54,3 +54,8 @@ export const getMonthProgress = (): number => {
 export const getNumDaysInMonth = (): number => {
     return new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
 }
+
+export const convertMonthNumToName = (monthNum: string) => {
+    const formatter = new Intl.DateTimeFormat('en', { month: 'long' });
+    return formatter.format(new Date(2024, parseInt(monthNum) - 1, 1));
+}
